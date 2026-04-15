@@ -1,0 +1,6 @@
+{
+  "title": "Accessibility",
+  "short_description": "WCAG 2.2 AA accessibility auditing with 10 Python scripts covering motor, cognitive, visual, and communication accessibility.",
+  "categories": ["accessibility", "testing", "web-development"],
+  "tags": ["wcag", "a11y", "accessibility", "screen-reader", "keyboard", "motor", "cognitive", "aac"]
+}

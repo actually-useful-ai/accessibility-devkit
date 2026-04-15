@@ -1,0 +1,28 @@
+{
+  "name": "accessibility",
+  "version": "1.0.0",
+  "description": "WCAG 2.2 AA accessibility auditing for Claude Code. Motor, cognitive, visual, and communication accessibility with 10 standalone Python audit scripts.",
+  "author": "Luke Steuber",
+  "homepage": "https://github.com/actually-useful-ai/accessibility",
+  "agents": [
+    {
+      "slug": "conscience",
+      "name": "conscience",
+      "path": "agents/conscience.md"
+    }
+  ],
+  "skills": [
+    {
+      "slug": "accessibility",
+      "name": "accessibility",
+      "path": "skills/accessibility/SKILL.md"
+    }
+  ],
+  "commands": [
+    {
+      "slug": "accessibility",
+      "name": "accessibility",
+      "path": "commands/accessibility.md"
+    }
+  ]
+}
