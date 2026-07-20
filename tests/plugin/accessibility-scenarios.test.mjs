@@ -74,10 +74,7 @@ test('keeps versioned baseline and post-skill review scenarios for the same prom
       'User testing',
     ]) {
       assert.ok(scenario.postSkill.manualEvidence.includes(evidence));
-      assert.match(
-        scenario.postSkill.verification[evidence],
-        /completed|unverified|planned/i,
-      );
+      assert.match(scenario.postSkill.verification[evidence], /completed|unverified|planned/i);
     }
     assert.ok(scenario.postSkill.routing.accessibility.length > 0);
     assert.ok(scenario.postSkill.routing.intentionalUx.length > 0);

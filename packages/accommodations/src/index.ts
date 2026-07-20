@@ -60,9 +60,13 @@ export function simulateColorBlindness(hex: string, type: ColorBlindType): strin
  */
 function hexToRgb(hex: string): [number, number, number] {
   const cleaned = hex.replace(/^#/, '');
-  const full = cleaned.length === 3
-    ? cleaned.split('').map((c) => c + c).join('')
-    : cleaned;
+  const full =
+    cleaned.length === 3
+      ? cleaned
+          .split('')
+          .map((c) => c + c)
+          .join('')
+      : cleaned;
   const num = parseInt(full, 16);
   return [(num >> 16) & 255, (num >> 8) & 255, num & 255];
 }
@@ -131,7 +135,7 @@ export function meetsWCAG(
   fg: string,
   bg: string,
   level: 'AA' | 'AAA' = 'AA',
-  size: 'normal' | 'large' = 'normal'
+  size: 'normal' | 'large' = 'normal',
 ): boolean {
   const ratio = getContrastRatio(fg, bg);
   return ratio >= WCAG_THRESHOLDS[level][size];
@@ -153,11 +157,7 @@ export function meetsWCAG(
  * findAccessibleColor('#aaaaaa', '#ffffff'); // '#767676' or darker
  * ```
  */
-export function findAccessibleColor(
-  fg: string,
-  bg: string,
-  level: 'AA' | 'AAA' = 'AA'
-): string {
+export function findAccessibleColor(fg: string, bg: string, level: 'AA' | 'AAA' = 'AA'): string {
   if (meetsWCAG(fg, bg, level)) return fg;
 
   const [r, g, b] = hexToRgb(fg);
@@ -228,9 +228,7 @@ export function prefersDarkMode(): boolean {
  * unsubscribe();
  * ```
  */
-export function watchPrefersReducedMotion(
-  callback: (prefers: boolean) => void
-): () => void {
+export function watchPrefersReducedMotion(callback: (prefers: boolean) => void): () => void {
   const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
   const handler = (e: MediaQueryListEvent) => callback(e.matches);
   mq.addEventListener('change', handler);

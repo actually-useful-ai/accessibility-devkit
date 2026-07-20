@@ -37,10 +37,7 @@ Implements the roving tabindex pattern for composite widgets (toolbars, radio gr
 ```ts
 import { createRovingTabindex } from '@accessibility-devkit/components';
 
-const { destroy } = createRovingTabindex(
-  document.getElementById('toolbar')!,
-  '[role="button"]'
-);
+const { destroy } = createRovingTabindex(document.getElementById('toolbar')!, '[role="button"]');
 
 // Remove event listeners when the component unmounts
 destroy();
@@ -77,15 +74,12 @@ Wraps a `<dialog>` or `role="dialog"` element with focus trapping, ARIA attribut
 ```ts
 import { AccessibleDialog } from '@accessibility-devkit/components';
 
-const dialog = new AccessibleDialog(
-  document.getElementById('confirm-dialog')!,
-  {
-    closeSelector: '[data-dialog-close]',
-    closeOnEscape: true,
-    onOpen: () => console.log('opened'),
-    onClose: () => console.log('closed'),
-  }
-);
+const dialog = new AccessibleDialog(document.getElementById('confirm-dialog')!, {
+  closeSelector: '[data-dialog-close]',
+  closeOnEscape: true,
+  onOpen: () => console.log('opened'),
+  onClose: () => console.log('closed'),
+});
 
 document.getElementById('open-btn')!.addEventListener('click', () => dialog.open());
 ```
@@ -102,7 +96,7 @@ import { AccessibleMenu } from '@accessibility-devkit/components';
 const menu = new AccessibleMenu(
   document.getElementById('menu-trigger')!,
   document.getElementById('menu-list')!,
-  '[role="menuitem"]'  // optional selector, this is the default
+  '[role="menuitem"]', // optional selector, this is the default
 );
 
 // Remove all listeners when done

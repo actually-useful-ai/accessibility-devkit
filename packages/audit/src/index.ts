@@ -58,9 +58,7 @@ function buildSummary(violations: axe.Result[]): AuditViolationSummary {
   };
 }
 
-function isContextObject(
-  context: axe.ElementContext
-): context is axe.ContextObject {
+function isContextObject(context: axe.ElementContext): context is axe.ContextObject {
   return (
     typeof context === 'object' &&
     context !== null &&
@@ -73,7 +71,7 @@ function isContextObject(
 function buildAuditContext(
   context: axe.ElementContext,
   include?: string[],
-  exclude?: string[]
+  exclude?: string[],
 ): axe.ElementContext {
   if (!include?.length && !exclude?.length) return context;
 
@@ -110,7 +108,7 @@ function buildAuditContext(
  */
 export async function runAudit(
   context: axe.ElementContext,
-  options: AuditOptions = {}
+  options: AuditOptions = {},
 ): Promise<AuditResult> {
   const { level = 'AA', tags = [], include, exclude } = options;
 
@@ -143,7 +141,7 @@ export async function runAudit(
  */
 export function formatReport(
   result: AuditResult,
-  format: 'text' | 'json' | 'markdown' = 'text'
+  format: 'text' | 'json' | 'markdown' = 'text',
 ): string {
   const { summary, violations } = result;
 
@@ -217,10 +215,7 @@ export function formatReport(
 export const eslintConfig = {
   plugins: { 'jsx-a11y': jsxA11y },
   rules: Object.fromEntries(
-    Object.keys(jsxA11y.rules ?? {}).map((rule) => [
-      `jsx-a11y/${rule}`,
-      'warn' as const,
-    ])
+    Object.keys(jsxA11y.rules ?? {}).map((rule) => [`jsx-a11y/${rule}`, 'warn' as const]),
   ),
 };
 

@@ -9,11 +9,5 @@
   "homepage": "https://github.com/lukeslp/accessibility-devkit#readme",
   "repository": "https://github.com/lukeslp/accessibility-devkit",
   "license": "MIT",
-  "keywords": [
-    "accessibility",
-    "wcag-2.2",
-    "aria",
-    "keyboard",
-    "screen-reader"
-  ]
+  "keywords": ["accessibility", "wcag-2.2", "aria", "keyboard", "screen-reader"]
 }

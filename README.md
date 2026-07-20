@@ -198,11 +198,11 @@ pnpm release     # Build and publish
 
 ## Related Projects
 
-| Project                                                                         | What it does                                                                                                     |
-| ------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| Project                                                                         | What it does                                                                                                    |
+| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | [accessibility-devkit-llm](https://github.com/lukeslp/accessibility-devkit-llm) | Language model extension for alt text generation, WCAG auditing with LLMs, an MCP server, and skill definitions |
-| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility)       | Curated list of accessibility resources and tools                                                                |
-| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)           | 53 datasets on disability demographics, web accessibility, and assistive technology usage                        |
+| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility)       | Curated list of accessibility resources and tools                                                               |
+| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)           | 53 datasets on disability demographics, web accessibility, and assistive technology usage                       |
 
 ---
 

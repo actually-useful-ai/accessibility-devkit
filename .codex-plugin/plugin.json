@@ -24,11 +24,7 @@
     "longDescription": "Assess web interfaces with native semantics, keyboard and assistive-technology checks, and a clear manual verification plan.",
     "developerName": "Luke Steuber",
     "category": "Developer Tools",
-    "capabilities": [
-      "Interactive",
-      "Read",
-      "Write"
-    ],
+    "capabilities": ["Interactive", "Read", "Write"],
     "websiteURL": "https://github.com/lukeslp/accessibility-devkit#readme",
     "defaultPrompt": [
       "Review this interface for accessibility barriers",

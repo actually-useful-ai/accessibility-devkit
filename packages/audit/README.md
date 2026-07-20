@@ -34,21 +34,21 @@ console.log(result2.summary.critical); // number of critical violations
 
 ### AuditOptions
 
-| Property | Type | Default | Description |
-|----------|------|---------|-------------|
-| `level` | `'A' \| 'AA' \| 'AAA'` | `'AA'` | WCAG conformance level to test against |
-| `tags` | `string[]` | `[]` | Additional axe tag filters applied alongside level tags |
-| `include` | `string[]` | — | CSS selectors to include in the audit |
-| `exclude` | `string[]` | — | CSS selectors to exclude from the audit |
+| Property  | Type                   | Default | Description                                             |
+| --------- | ---------------------- | ------- | ------------------------------------------------------- |
+| `level`   | `'A' \| 'AA' \| 'AAA'` | `'AA'`  | WCAG conformance level to test against                  |
+| `tags`    | `string[]`             | `[]`    | Additional axe tag filters applied alongside level tags |
+| `include` | `string[]`             | —       | CSS selectors to include in the audit                   |
+| `exclude` | `string[]`             | —       | CSS selectors to exclude from the audit                 |
 
 ### AuditResult
 
 ```ts
 interface AuditResult {
-  violations: axe.Result[];    // Rules that failed
-  passes: axe.Result[];        // Rules that passed
-  incomplete: axe.Result[];    // Rules that need manual review
-  inapplicable: axe.Result[];  // Rules not applicable to this context
+  violations: axe.Result[]; // Rules that failed
+  passes: axe.Result[]; // Rules that passed
+  incomplete: axe.Result[]; // Rules that need manual review
+  inapplicable: axe.Result[]; // Rules not applicable to this context
   summary: AuditViolationSummary;
 }
 
@@ -66,9 +66,9 @@ interface AuditViolationSummary {
 Formats an `AuditResult` into a readable string.
 
 ```ts
-formatReport(result);              // plain text (default)
-formatReport(result, 'markdown');  // markdown with tables and code blocks
-formatReport(result, 'json');      // full JSON for tooling
+formatReport(result); // plain text (default)
+formatReport(result, 'markdown'); // markdown with tables and code blocks
+formatReport(result, 'json'); // full JSON for tooling
 ```
 
 ### eslintConfig

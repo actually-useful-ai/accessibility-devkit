@@ -18,11 +18,11 @@ Overlays attempt to fix accessibility issues at the presentation layer, after th
 
 The `accessibility-devkit` advocates for a layered approach that addresses accessibility at every stage of the development lifecycle.
 
-| Layer | What It Does | Tools |
-|---|---|---|
-| **Testing & Auditing** | Catches violations during development and in CI/CD. | `@accessibility-devkit/audit` (axe-core, eslint-plugin-jsx-a11y) |
-| **Components & Patterns** | Provides structurally sound, accessible building blocks. | `@accessibility-devkit/components` (focus-trap, skip-nav, live-region) |
-| **Accommodations** | Respects user preferences for specific needs. | `@accessibility-devkit/accommodations` (color-blind simulation, reduced-motion, dyslexia fonts) |
+| Layer                     | What It Does                                             | Tools                                                                                           |
+| ------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| **Testing & Auditing**    | Catches violations during development and in CI/CD.      | `@accessibility-devkit/audit` (axe-core, eslint-plugin-jsx-a11y)                                |
+| **Components & Patterns** | Provides structurally sound, accessible building blocks. | `@accessibility-devkit/components` (focus-trap, skip-nav, live-region)                          |
+| **Accommodations**        | Respects user preferences for specific needs.            | `@accessibility-devkit/accommodations` (color-blind simulation, reduced-motion, dyslexia fonts) |
 
 This approach ensures that accessibility is built into the foundation of the application, rather than being painted on top.
 

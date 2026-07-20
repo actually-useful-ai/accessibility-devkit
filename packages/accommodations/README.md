@@ -17,7 +17,7 @@ Returns the hex color as it appears to someone with the given color vision defic
 ```ts
 import { simulateColorBlindness } from '@accessibility-devkit/accommodations';
 
-simulateColorBlindness('#ff0000', 'protanopia');    // red as seen with protanopia
+simulateColorBlindness('#ff0000', 'protanopia'); // red as seen with protanopia
 simulateColorBlindness('#00ff00', 'deuteranomaly'); // green as seen with partial deutan deficiency
 ```
 
@@ -25,15 +25,15 @@ simulateColorBlindness('#00ff00', 'deuteranomaly'); // green as seen with partia
 
 All 7 supported deficiency types:
 
-| Value | Description |
-|-------|-------------|
-| `'protanopia'` | Complete red insensitivity |
-| `'deuteranopia'` | Complete green insensitivity |
-| `'tritanopia'` | Complete blue insensitivity |
+| Value             | Description                             |
+| ----------------- | --------------------------------------- |
+| `'protanopia'`    | Complete red insensitivity              |
+| `'deuteranopia'`  | Complete green insensitivity            |
+| `'tritanopia'`    | Complete blue insensitivity             |
 | `'achromatopsia'` | Complete color blindness (monochromacy) |
-| `'protanomaly'` | Partial red insensitivity |
-| `'deuteranomaly'` | Partial green insensitivity |
-| `'tritanomaly'` | Partial blue insensitivity |
+| `'protanomaly'`   | Partial red insensitivity               |
+| `'deuteranomaly'` | Partial green insensitivity             |
+| `'tritanomaly'`   | Partial blue insensitivity              |
 
 The `-omaly` variants are partial deficiencies; the others are complete loss of that channel.
 
@@ -57,10 +57,10 @@ Checks whether a foreground/background pair meets a WCAG contrast threshold.
 ```ts
 import { meetsWCAG } from '@accessibility-devkit/accommodations';
 
-meetsWCAG('#767676', '#ffffff');                    // false — fails AA normal text
-meetsWCAG('#595959', '#ffffff');                    // true  — passes AA normal text
-meetsWCAG('#767676', '#ffffff', 'AA', 'large');     // true  — passes AA large text
-meetsWCAG('#595959', '#ffffff', 'AAA');             // false — fails AAA normal text
+meetsWCAG('#767676', '#ffffff'); // false — fails AA normal text
+meetsWCAG('#595959', '#ffffff'); // true  — passes AA normal text
+meetsWCAG('#767676', '#ffffff', 'AA', 'large'); // true  — passes AA large text
+meetsWCAG('#595959', '#ffffff', 'AAA'); // false — fails AAA normal text
 ```
 
 WCAG thresholds: AA normal = 4.5:1, AA large = 3:1, AAA normal = 7:1, AAA large = 4.5:1.
@@ -72,7 +72,7 @@ Adjusts a foreground color (darkening first, then lightening) until it meets the
 ```ts
 import { findAccessibleColor } from '@accessibility-devkit/accommodations';
 
-findAccessibleColor('#aaaaaa', '#ffffff');         // returns a darker gray that passes AA
+findAccessibleColor('#aaaaaa', '#ffffff'); // returns a darker gray that passes AA
 findAccessibleColor('#aaaaaa', '#ffffff', 'AAA'); // returns an even darker shade for AAA
 ```
 
@@ -106,13 +106,14 @@ unsubscribe();
 ### Other preference checks
 
 ```ts
-import {
-  prefersHighContrast,
-  prefersDarkMode,
-} from '@accessibility-devkit/accommodations';
+import { prefersHighContrast, prefersDarkMode } from '@accessibility-devkit/accommodations';
 
-if (prefersHighContrast()) { /* apply high-contrast theme */ }
-if (prefersDarkMode())     { /* apply dark theme */ }
+if (prefersHighContrast()) {
+  /* apply high-contrast theme */
+}
+if (prefersDarkMode()) {
+  /* apply dark theme */
+}
 ```
 
 ## Dependencies
