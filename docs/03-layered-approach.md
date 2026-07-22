@@ -26,14 +26,34 @@ Focus management utilities (wrapping `focus-trap`), a skip navigation component,
 
 Use this layer when building custom interactive components like modals, dropdowns, tabs, or any element that requires keyboard navigation and screen reader support.
 
-## Layer 3: Accommodations (`@accessibility-devkit/accommodations`)
+## Layer 3: Accommodations by disability domain
 
-This layer addresses specific disability needs that go beyond structural accessibility. It provides utilities for detecting and responding to user preferences and simulating various conditions during development.
+This layer addresses specific disability needs that go beyond structural accessibility. Most accessibility tooling stops at visual and structural checks; this layer deliberately covers motor, cognitive, sensory, literacy, and vestibular access as well. It is a family of small, framework-agnostic packages, each mapped to the WCAG success criteria it serves.
 
-**What it includes:**
+### `@accessibility-devkit/accommodations`
 
-Color blindness simulation (protanopia, deuteranopia, tritanopia) for design validation. Reduced motion detection and utilities for epilepsy and vestibular disorder accommodation. Dyslexia-friendly font loading. High contrast mode detection. Text spacing and readability adjustments.
+Color and perception: color blindness simulation (protanopia, deuteranopia, tritanopia, and the partial variants), WCAG contrast math, automatic color adjustment, system-preference detection (`prefers-reduced-motion`, `prefers-contrast`, `prefers-color-scheme`), dyslexia-friendly typography, and WCAG 1.4.12 text spacing.
+
+### `@accessibility-devkit/motor`
+
+Motor and mobility: target-size checks (2.5.8 / 2.5.5), pointer cancellation (2.5.2), a keyboard alternative to dragging (2.5.7), and tremor tolerance (rapid-repeat suppression, dwell activation). For people who use switches, eye-gaze, head pointers, or who have limited dexterity or tremor.
+
+### `@accessibility-devkit/cognitive`
+
+Cognitive load: adjustable session timeouts with warnings (2.2.1 / 2.2.6), redundant-entry memory (3.3.7), accessible-authentication helpers (3.3.8), and an undo controller for reversible actions (3.3.4 / 3.3.6).
+
+### `@accessibility-devkit/language`
+
+Reading level and literacy: readability scoring (Flesch Reading Ease, Flesch–Kincaid grade, Automated Readability Index), plain-language flags for long sentences and complex words, and abbreviation annotation (3.1.4).
+
+### `@accessibility-devkit/media`
+
+Auditory and media access: caption and audio-description checks (1.2.2 / 1.2.5), autoplay-audio detection and an injected pause control (1.4.2), and transcript association.
+
+### `@accessibility-devkit/motion`
+
+Seizure and vestibular safety: reduced-motion gating (2.3.3), motion-safe scrolling, and flash-rate metering against the three-per-second threshold (2.3.1).
 
 **When to use it:**
 
-Use this layer when you need to go beyond WCAG compliance and actively accommodate specific user needs. It is particularly useful during the design and QA phases of development.
+Use these packages when you need to go beyond a baseline WCAG scan and actively accommodate specific user needs. Reach for the package that matches the barrier — motor, cognitive, language, media, motion, or general perception — and compose them as your interface requires.

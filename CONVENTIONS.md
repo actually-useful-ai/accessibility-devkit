@@ -13,7 +13,9 @@ These conventions keep the Accessibility Devkit packages consistent and easy to 
 
 Packages use the `@accessibility-devkit` scope.
 
-- **Packages:** `@accessibility-devkit/<name>` (for example, `audit`, `components`, and `accommodations`)
+- **Packages:** `@accessibility-devkit/<name>` (for example, `audit`, `components`, `accommodations`, `motor`, `cognitive`, `language`, `media`, and `motion`)
+
+New disability-domain accommodations live as packages within this repository rather than as separate `accessibility-devkit-<area>` repositories. Name a domain package for the barrier it addresses (`motor`, `cognitive`, `language`, `media`, `motion`), and map each utility to the WCAG success criteria it serves.
 
 ## 2. Repository Structure
 

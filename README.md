@@ -8,7 +8,7 @@ Not another overlay widget. Not a snippet pack. This is a collection of code-lev
 
 Accessibility technical debt compounds fast. It's expensive to retrofit, and it locks real people out of what you built. Building it in from the start is easier than fixing it later. It's also the right thing to do.
 
-Three packages, all framework-agnostic TypeScript, all mapped to specific WCAG 2.x success criteria.
+Eight packages, all framework-agnostic TypeScript, all mapped to specific WCAG 2.x success criteria. They span motor, cognitive, sensory, literacy, and vestibular access — not just the visual and structural checks most tools stop at.
 
 ---
 
@@ -161,6 +161,98 @@ if (!meetsWCAG('#aaaaaa', '#ffffff')) {
 const simulated = simulateColorBlindness('#ff0000', 'deuteranopia');
 ```
 
+The same package also covers dyslexia-friendly typography and WCAG 1.4.12 text spacing (`applyDyslexiaFriendlyFont`, `applyTextSpacing`, `meetsTextSpacing`).
+
+---
+
+### [@accessibility-devkit/motor](./packages/motor)
+
+Motor and mobility support for people who use switches, eye-gaze, head pointers, or who have limited dexterity or tremor.
+
+- **Target size** checks against WCAG 2.5.8 (24px) and 2.5.5 (44px), plus a scanner for undersized controls
+- **Pointer cancellation** (2.5.2): fire on release, abort by sliding off the control
+- **Keyboard dragging alternative** (2.5.7): drive any drag with arrow keys
+- **Tremor tolerance**: drop accidental repeat activations, or activate on dwell instead of click
+
+```ts
+import { findUndersizedTargets, makeKeyboardDraggable } from '@accessibility-devkit/motor';
+
+findUndersizedTargets(document.body); // controls below the target-size threshold
+makeKeyboardDraggable(sliderThumb, { onMove: ({ dx }) => setValue((v) => v + dx) });
+```
+
+---
+
+### [@accessibility-devkit/cognitive](./packages/cognitive)
+
+Reduce time pressure, memory load, and the cost of mistakes for people with cognitive, learning, or attention-related disabilities.
+
+- **Session timeouts** (2.2.1 / 2.2.6): warn before expiry and let people ask for more time
+- **Redundant-entry memory** (3.3.7): remember what was typed, never persist passwords
+- **Accessible authentication** (3.3.8): re-enable blocked paste, flag credential-field barriers
+- **Undo controller** (3.3.4 / 3.3.6): make consequential actions reversible
+
+```ts
+import { createSessionTimeout, allowPaste } from '@accessibility-devkit/cognitive';
+
+createSessionTimeout({ idleMs: 900_000, onWarn: showExtendDialog, onExpire: logout });
+allowPaste(document.querySelector('#one-time-code')!);
+```
+
+---
+
+### [@accessibility-devkit/language](./packages/language)
+
+Reading level and literacy support for people with reading, language, and learning disabilities.
+
+- **Readability scoring**: Flesch Reading Ease, Flesch–Kincaid grade, and the Automated Readability Index
+- **Plain-language flags**: over-long sentences and multi-syllable words
+- **Abbreviation annotation** (3.1.4): wrap first use in `<abbr title>`
+
+```ts
+import { readingLevel, findLongSentences } from '@accessibility-devkit/language';
+
+readingLevel(paragraph).band; // 'easy' | 'moderate' | 'difficult'
+findLongSentences(paragraph, 20); // sentences to shorten
+```
+
+---
+
+### [@accessibility-devkit/media](./packages/media)
+
+Auditory and media access for people who are Deaf or hard of hearing, and anyone disrupted by unexpected sound.
+
+- **Caption and audio-description checks** (1.2.2 / 1.2.5)
+- **Autoplay-audio detection and control** (1.4.2): find it, then inject a pause button
+- **Transcript association** through `aria-describedby`
+
+```ts
+import { auditMedia, ensureAudioControl, findAutoplayingAudio } from '@accessibility-devkit/media';
+
+auditMedia(document.body); // missing captions, autoplay audio, unreachable players
+findAutoplayingAudio().forEach(ensureAudioControl);
+```
+
+---
+
+### [@accessibility-devkit/motion](./packages/motion)
+
+Seizure and vestibular safety for people with vestibular disorders and photosensitive conditions.
+
+- **Reduced-motion gating** (2.3.3): pick a calm alternative, sync classes to the preference
+- **Safe scrolling**: instant under reduced motion, smooth otherwise
+- **Flash metering** (2.3.1): self-check a strobing effect against the three-per-second threshold
+
+```ts
+import { withReducedMotion, createFlashMeter } from '@accessibility-devkit/motion';
+
+withReducedMotion(
+  () => slide(),
+  () => fade(),
+);
+const meter = createFlashMeter({ onUnsafe: () => stopAnimation() });
+```
+
 ---
 
 ### Install packages
@@ -168,15 +260,14 @@ const simulated = simulateColorBlindness('#ff0000', 'deuteranopia');
 Install only the packages your application needs:
 
 ```bash
-npm install @accessibility-devkit/audit
-npm install @accessibility-devkit/components
-npm install @accessibility-devkit/accommodations
-```
-
-Or all three at once:
-
-```bash
-npm install @accessibility-devkit/audit @accessibility-devkit/components @accessibility-devkit/accommodations
+npm install @accessibility-devkit/audit          # testing and auditing
+npm install @accessibility-devkit/components     # accessible UI primitives
+npm install @accessibility-devkit/accommodations # color, contrast, preferences, typography
+npm install @accessibility-devkit/motor          # target size, pointer, dragging, tremor
+npm install @accessibility-devkit/cognitive      # timeouts, redundant entry, auth, undo
+npm install @accessibility-devkit/language       # readability, plain language, abbreviations
+npm install @accessibility-devkit/media          # captions, transcripts, autoplay audio
+npm install @accessibility-devkit/motion         # reduced motion, safe scroll, flash safety
 ```
 
 All packages ship CJS and ESM builds with full TypeScript declarations.
@@ -198,11 +289,10 @@ pnpm release     # Build and publish
 
 ## Related Projects
 
-| Project                                                                         | What it does                                                                                                    |
-| ------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
-| [accessibility-devkit-llm](https://github.com/lukeslp/accessibility-devkit-llm) | Language model extension for alt text generation, WCAG auditing with LLMs, an MCP server, and skill definitions |
-| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility)       | Curated list of accessibility resources and tools                                                               |
-| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)           | 53 datasets on disability demographics, web accessibility, and assistive technology usage                       |
+| Project                                                                   | What it does                                                                              |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility) | Curated list of accessibility resources and tools                                         |
+| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)     | 53 datasets on disability demographics, web accessibility, and assistive technology usage |
 
 ---
 
