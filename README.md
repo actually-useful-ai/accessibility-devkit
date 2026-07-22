@@ -75,6 +75,35 @@ Claude Code uses its own marketplace commands. Run these in Claude Code, then us
 
 ---
 
+## Specialize for your project
+
+Two entry points, depending on how you work.
+
+**Working with an agent (Claude Code, Codex).** Install the plugin above and run the first prompt. The `accessibility` skill reviews your interface, and when the project has a clear shape it hands off to a specialist that re-weights the review for your context. Each specialist keeps the same evidence and verification discipline; it just changes what to check first.
+
+| If you're building…                        | Specialist skill         | What it puts first                                                                  |
+| ------------------------------------------ | ------------------------ | ----------------------------------------------------------------------------------- |
+| A game or real-time interactive experience | `accessibility-gaming`   | Flash safety, input remapping, captions for audio cues, assist and difficulty modes |
+| Enterprise, SaaS, or internal tools        | `accessibility-business` | Forms, session timeouts, authentication, error recovery, conformance evidence       |
+| Visual design or a design system           | `accessibility-design`   | Color and contrast, typography, motion budgets, accessible component specs          |
+
+Ask for a specialist by name, or let the general skill route you. Design work also leans on the separate [`intentional-ux`](https://github.com/actually-useful-ai/intentional-ux) skill for flow and decision-cost questions.
+
+**Writing code directly.** Reach for the package that matches the barrier:
+
+| Barrier                                                      | Package          |
+| ------------------------------------------------------------ | ---------------- |
+| Small tap targets, drag-only interactions, tremor            | `motor`          |
+| Sessions timing out, re-entered data, blocked paste, no undo | `cognitive`      |
+| Text too hard to read, unexpanded abbreviations              | `language`       |
+| Missing captions, autoplaying sound                          | `media`          |
+| Flashing, parallax, motion sickness                          | `motion`         |
+| Low contrast, color-only meaning, hard-to-read type          | `accommodations` |
+| Focus traps, dialogs, menus, skip links, live regions        | `components`     |
+| Automated WCAG scanning and CI gates                         | `audit`          |
+
+The two axes compose: the specialists (what you're building) prioritize the packages (what human need is served). Each package section below links to its full API reference.
+
 ## Optional TypeScript packages
 
 ### [@accessibility-devkit/audit](./packages/audit)
