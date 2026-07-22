@@ -1,0 +1,42 @@
+{
+  "name": "@accessibility-devkit/language",
+  "version": "0.1.0",
+  "description": "Utilities for reading level and literacy: readability scoring, plain-language flags, and abbreviation annotation.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run --environment jsdom"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "readability",
+    "reading-level",
+    "plain-language",
+    "flesch-kincaid",
+    "literacy",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeslp/accessibility-devkit.git",
+    "directory": "packages/language"
+  },
+  "bugs": {
+    "url": "https://github.com/lukeslp/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/lukeslp/accessibility-devkit/tree/master/packages/language#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
+}

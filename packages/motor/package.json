@@ -1,0 +1,42 @@
+{
+  "name": "@accessibility-devkit/motor",
+  "version": "0.1.0",
+  "description": "Utilities for motor and mobility accommodations: target size, pointer cancellation, drag and gesture alternatives, and tremor tolerance.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run --environment jsdom"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "motor",
+    "mobility",
+    "target-size",
+    "pointer",
+    "tremor",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeslp/accessibility-devkit.git",
+    "directory": "packages/motor"
+  },
+  "bugs": {
+    "url": "https://github.com/lukeslp/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/lukeslp/accessibility-devkit/tree/master/packages/motor#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
+}

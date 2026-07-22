@@ -1,0 +1,42 @@
+{
+  "name": "@accessibility-devkit/motion",
+  "version": "0.1.0",
+  "description": "Utilities for seizure and vestibular safety: reduced-motion gating, safe scrolling, and flash-rate metering.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "vitest run --environment jsdom"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "reduced-motion",
+    "vestibular",
+    "seizure",
+    "flash",
+    "animation",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lukeslp/accessibility-devkit.git",
+    "directory": "packages/motion"
+  },
+  "bugs": {
+    "url": "https://github.com/lukeslp/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/lukeslp/accessibility-devkit/tree/master/packages/motion#readme",
+  "devDependencies": {
+    "@types/node": "^20.11.24"
+  }
+}
