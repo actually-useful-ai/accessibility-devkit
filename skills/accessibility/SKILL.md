@@ -29,6 +29,16 @@ Keep semantic and assistive-technology compliance here: native controls, ARIA ex
 
 Route task-path friction, surface-level experience, and product trade-offs to `intentional-ux`: confusing flows, decision burden, hierarchy, or choices that need design intent beyond a specific accessibility barrier. Keep the accessibility evidence attached when the same issue affects both areas.
 
+## Specialists
+
+When the project has a strong domain shape, apply the matching specialist lens on top of this review order. Each one keeps the same evidence and verification discipline but re-weights the criteria that matter most for that context:
+
+- **`accessibility-gaming`** — games and real-time interactive experiences: photosensitivity and flash safety, input remapping, captions for audio cues, assist and difficulty modes.
+- **`accessibility-business`** — enterprise and SaaS: long forms, data tables, session timeouts, authentication, error recovery, and procurement or conformance evidence.
+- **`accessibility-design`** — visual design and design systems: color and contrast, non-color cues, typography and text spacing, motion budgets, and accessible component specs.
+
+Pick the specialist that fits what is being built; use this general skill directly when none clearly applies.
+
 ## Practical guardrails
 
 - Do not replace a real control with a click handler on a generic element when native HTML fits.

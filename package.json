@@ -19,7 +19,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "spelling": "cspell --config cspell.json README.md examples/accessible-component-review.md",
-    "test": "pnpm spelling && node --test tests/plugin/accessibility-scenarios.test.mjs tests/docs/adoption-quick-start.test.mjs && pnpm --filter=\"./packages/*\" --parallel test",
+    "test": "pnpm spelling && node --test tests/plugin/accessibility-scenarios.test.mjs tests/plugin/specialists.test.mjs tests/docs/adoption-quick-start.test.mjs && pnpm --filter=\"./packages/*\" --parallel test",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "pnpm build && changeset publish"
