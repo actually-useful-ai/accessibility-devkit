@@ -3,8 +3,11 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
+  applyDyslexiaFriendlyFont,
+  applyTextSpacing,
   findAccessibleColor,
   getContrastRatio,
+  meetsTextSpacing,
   meetsWCAG,
   simulateColorBlindness,
   watchPrefersReducedMotion,
@@ -13,6 +16,7 @@ import {
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  document.body.innerHTML = '';
 });
 
 describe('contrast ratio', () => {
@@ -93,5 +97,30 @@ describe('reduced-motion preference watcher', () => {
     mediaQuery.dispatchEvent(restored);
 
     expect(observed).toEqual([true]);
+  });
+});
+
+describe('readable typography', () => {
+  it('applies a dyslexia-friendly font and restores the prior inline styles', () => {
+    const el = document.createElement('p');
+    el.style.lineHeight = '1';
+    document.body.appendChild(el);
+
+    const restore = applyDyslexiaFriendlyFont(el);
+    expect(el.style.fontFamily).toContain('OpenDyslexic');
+    expect(el.style.lineHeight).toBe('1.5');
+
+    restore();
+    expect(el.style.fontFamily).toBe('');
+    expect(el.style.lineHeight).toBe('1');
+  });
+
+  it('applies WCAG 1.4.12 text spacing that meetsTextSpacing accepts', () => {
+    const el = document.createElement('p');
+    document.body.appendChild(el);
+    expect(meetsTextSpacing(el)).toBe(false);
+
+    applyTextSpacing(el);
+    expect(meetsTextSpacing(el)).toBe(true);
   });
 });

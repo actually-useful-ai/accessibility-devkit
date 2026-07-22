@@ -234,3 +234,150 @@ export function watchPrefersReducedMotion(callback: (prefers: boolean) => void):
   mq.addEventListener('change', handler);
   return () => mq.removeEventListener('change', handler);
 }
+
+// ============================================================
+// Readable Typography (WCAG 1.4.12 Text Spacing)
+// ============================================================
+
+/**
+ * A dyslexia-friendly font stack. `OpenDyslexic` is listed first for pages that
+ * load it as a web font; the rest are evenly-spaced sans-serif fallbacks.
+ */
+export const DYSLEXIA_FRIENDLY_FONT_STACK =
+  "'OpenDyslexic', 'Comic Sans MS', 'Trebuchet MS', Verdana, Tahoma, sans-serif";
+
+export interface DyslexiaFontOptions {
+  /** Font-family stack to apply (default {@link DYSLEXIA_FRIENDLY_FONT_STACK}). */
+  fontFamily?: string;
+  /** Letter spacing to apply (default '0.05em'). */
+  letterSpacing?: string;
+  /** Line height to apply (default '1.5'). */
+  lineHeight?: string;
+}
+
+/**
+ * Applies a dyslexia-friendly font and spacing to an element via inline styles.
+ * Loading the `OpenDyslexic` web font (if wanted) is the caller's job; the
+ * fallbacks work without it.
+ *
+ * @param element - The element to restyle
+ * @param options - Font and spacing overrides
+ * @returns A cleanup function that restores the previous inline styles
+ *
+ * @example
+ * ```ts
+ * const restore = applyDyslexiaFriendlyFont(article);
+ * // to undo: restore();
+ * ```
+ */
+export function applyDyslexiaFriendlyFont(
+  element: HTMLElement,
+  options: DyslexiaFontOptions = {},
+): () => void {
+  const previous = {
+    fontFamily: element.style.fontFamily,
+    letterSpacing: element.style.letterSpacing,
+    lineHeight: element.style.lineHeight,
+  };
+  element.style.fontFamily = options.fontFamily ?? DYSLEXIA_FRIENDLY_FONT_STACK;
+  element.style.letterSpacing = options.letterSpacing ?? '0.05em';
+  element.style.lineHeight = options.lineHeight ?? '1.5';
+  return () => {
+    element.style.fontFamily = previous.fontFamily;
+    element.style.letterSpacing = previous.letterSpacing;
+    element.style.lineHeight = previous.lineHeight;
+  };
+}
+
+/** WCAG 1.4.12 text-spacing minimums, expressed relative to font size. */
+export const TEXT_SPACING_MINIMUMS = {
+  /** Line height ≥ 1.5 × font size. */
+  lineHeight: 1.5,
+  /** Letter spacing ≥ 0.12 × font size. */
+  letterSpacing: 0.12,
+  /** Word spacing ≥ 0.16 × font size. */
+  wordSpacing: 0.16,
+} as const;
+
+export interface TextSpacingOptions {
+  /** Line height (default '1.5'). */
+  lineHeight?: string;
+  /** Letter spacing (default '0.12em'). */
+  letterSpacing?: string;
+  /** Word spacing (default '0.16em'). */
+  wordSpacing?: string;
+}
+
+/**
+ * Applies WCAG 1.4.12 text spacing to an element via inline styles: line height
+ * 1.5, letter spacing 0.12em, and word spacing 0.16em by default. Paragraph
+ * spacing (2em following paragraphs) should be set on the paragraph elements
+ * themselves.
+ *
+ * @param element - The element to restyle
+ * @param options - Spacing overrides
+ * @returns A cleanup function that restores the previous inline styles
+ */
+export function applyTextSpacing(
+  element: HTMLElement,
+  options: TextSpacingOptions = {},
+): () => void {
+  const previous = {
+    lineHeight: element.style.lineHeight,
+    letterSpacing: element.style.letterSpacing,
+    wordSpacing: element.style.wordSpacing,
+  };
+  element.style.lineHeight = options.lineHeight ?? '1.5';
+  element.style.letterSpacing = options.letterSpacing ?? '0.12em';
+  element.style.wordSpacing = options.wordSpacing ?? '0.16em';
+  return () => {
+    element.style.lineHeight = previous.lineHeight;
+    element.style.letterSpacing = previous.letterSpacing;
+    element.style.wordSpacing = previous.wordSpacing;
+  };
+}
+
+/**
+ * Reads a spacing value as a multiple of font size. `em` values are already
+ * relative; `px` values are divided by the font size; unitless values (used for
+ * line height) are returned as-is. `normal`, empty, or unparseable values yield
+ * `null`.
+ * @internal
+ */
+function spacingRatio(value: string, fontSizePx: number): number | null {
+  if (!value || value === 'normal') return null;
+  const num = parseFloat(value);
+  if (Number.isNaN(num)) return null;
+  if (value.endsWith('em')) return num;
+  if (value.endsWith('px')) return fontSizePx > 0 ? num / fontSizePx : null;
+  return num; // unitless (line height)
+}
+
+/**
+ * Checks whether an element's computed line height, letter spacing, and word
+ * spacing meet the WCAG 1.4.12 minimums. Values of `normal` count as not
+ * meeting the requirement, since they fall below the thresholds.
+ *
+ * @param element - The element to check
+ * @returns true if all three spacing metrics meet or exceed the minimums
+ */
+export function meetsTextSpacing(element: HTMLElement): boolean {
+  const computed = window.getComputedStyle(element);
+  const fontSizePx = parseFloat(computed.fontSize) || 16;
+
+  const read = (prop: 'lineHeight' | 'letterSpacing' | 'wordSpacing'): number | null =>
+    spacingRatio(computed[prop] || element.style[prop], fontSizePx);
+
+  const lineHeight = read('lineHeight');
+  const letterSpacing = read('letterSpacing');
+  const wordSpacing = read('wordSpacing');
+
+  return (
+    lineHeight !== null &&
+    lineHeight >= TEXT_SPACING_MINIMUMS.lineHeight &&
+    letterSpacing !== null &&
+    letterSpacing >= TEXT_SPACING_MINIMUMS.letterSpacing &&
+    wordSpacing !== null &&
+    wordSpacing >= TEXT_SPACING_MINIMUMS.wordSpacing
+  );
+}

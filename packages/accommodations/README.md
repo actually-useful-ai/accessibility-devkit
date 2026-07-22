@@ -116,6 +116,34 @@ if (prefersDarkMode()) {
 }
 ```
 
+## Readable Typography (WCAG 1.4.12)
+
+### applyDyslexiaFriendlyFont
+
+Applies a dyslexia-friendly font and spacing via inline styles, and returns a function that restores the previous styles. Load the `OpenDyslexic` web font yourself if you want it; the fallbacks work without it.
+
+```ts
+import { applyDyslexiaFriendlyFont } from '@accessibility-devkit/accommodations';
+
+const restore = applyDyslexiaFriendlyFont(article);
+// to undo:
+restore();
+```
+
+### applyTextSpacing / meetsTextSpacing
+
+Applies the WCAG 1.4.12 text-spacing minimums (line height 1.5, letter spacing 0.12em, word spacing 0.16em) and checks whether an element already meets them.
+
+```ts
+import { applyTextSpacing, meetsTextSpacing } from '@accessibility-devkit/accommodations';
+
+if (!meetsTextSpacing(article)) {
+  applyTextSpacing(article);
+}
+```
+
+Paragraph spacing (2em following paragraphs) should be set on the paragraph elements themselves.
+
 ## Dependencies
 
 - [`color-blind`](https://github.com/skratchdot/color-blind) — color vision deficiency simulation
