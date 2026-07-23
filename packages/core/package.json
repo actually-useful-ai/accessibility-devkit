@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/core",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Portable accessibility checks for contrast, readable text, flash frequency, and time limits.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

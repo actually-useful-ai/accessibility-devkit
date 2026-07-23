@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/audit",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Auditing and testing tools for the Accessibility Devkit.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

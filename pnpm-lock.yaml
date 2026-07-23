@@ -47,7 +47,7 @@ importers:
   packages/accommodations:
     dependencies:
       '@accessibility-devkit/core':
-        specifier: workspace:*
+        specifier: 1.1.1
         version: link:../core
       '@bjornlu/colorblind':
         specifier: 1.0.3
@@ -73,7 +73,7 @@ importers:
   packages/cli:
     dependencies:
       '@accessibility-devkit/core':
-        specifier: workspace:*
+        specifier: 1.1.1
         version: link:../core
     devDependencies:
       '@types/node':
@@ -83,7 +83,7 @@ importers:
   packages/cognitive:
     dependencies:
       '@accessibility-devkit/core':
-        specifier: workspace:*
+        specifier: 1.1.1
         version: link:../core
     devDependencies:
       '@types/node':
@@ -105,7 +105,7 @@ importers:
   packages/language:
     dependencies:
       '@accessibility-devkit/core':
-        specifier: workspace:*
+        specifier: 1.1.1
         version: link:../core
     devDependencies:
       '@types/node':
@@ -121,7 +121,7 @@ importers:
   packages/motion:
     dependencies:
       '@accessibility-devkit/core':
-        specifier: workspace:*
+        specifier: 1.1.1
         version: link:../core
     devDependencies:
       '@types/node':

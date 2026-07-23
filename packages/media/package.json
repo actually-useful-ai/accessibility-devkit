@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/media",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utilities for auditory and media accessibility: caption and transcript checks, audio-only detection, and autoplay-audio control.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,7 +1,7 @@
 # Accessibility Devkit
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Release](https://img.shields.io/badge/release-v1.1.0-blue.svg)](https://github.com/actually-useful-ai/accessibility-devkit/releases/tag/v1.1.0)
+[![Release](https://img.shields.io/badge/release-v1.1.1-blue.svg)](https://github.com/actually-useful-ai/accessibility-devkit/releases/tag/v1.1.1)
 
 Accessibility is the distance between intention and outcome. Accessibility Devkit helps shorten that distance with portable checks, focused browser utilities, and a review workflow that says exactly what still needs a browser, assistive technology, or a person.
 
