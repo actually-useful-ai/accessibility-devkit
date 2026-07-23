@@ -52,6 +52,6 @@
     "@bjornlu/colorblind": "1.0.3"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24"
+    "@types/node": "^26.1.1"
   }
 }

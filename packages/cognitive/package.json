@@ -54,6 +54,6 @@
     "@accessibility-devkit/core": "1.1.1"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24"
+    "@types/node": "^26.1.1"
   }
 }
