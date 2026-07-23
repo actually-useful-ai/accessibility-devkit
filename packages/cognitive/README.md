@@ -2,25 +2,17 @@
 
 Utilities for cognitive accessibility: adjustable session timeouts with warnings, redundant-entry memory, accessible-authentication helpers, and an undo controller. These reduce time pressure, memory load, and the cost of mistakes for people with cognitive, learning, or attention-related disabilities.
 
-## Build and test from source
-
-This package is source-only and not yet published to npm. Clone the repository and work with it through the pnpm workspace:
-
 ```bash
-git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-cd accessibility-devkit
-pnpm install
-pnpm --filter @accessibility-devkit/cognitive build
-pnpm --filter @accessibility-devkit/cognitive test
+npm install @accessibility-devkit/cognitive
 ```
 
-The examples below assume you are working from that cloned workspace.
+The helpers reduce common barriers but cannot prove comprehension, recovery, or usable pacing. Complete browser and human testing around the real task.
 
 ## Session Timeout (WCAG 2.2.1 / 2.2.6)
 
 ### createSessionTimeout
 
-Warns before a session expires and gives the person a way to extend it. Activity — or an explicit `extend()` — restarts the countdown.
+Warns before a session expires and gives the person a way to extend it. Activity—or an explicit `extend()`—restarts the countdown. This helper alone does not establish WCAG 2.2.1 conformance.
 
 ```ts
 import { createSessionTimeout } from '@accessibility-devkit/cognitive';
@@ -36,6 +28,16 @@ const session = createSessionTimeout({
 session.extend();
 // on unmount:
 session.stop();
+```
+
+### assessTimeLimit
+
+Evaluates the deterministic policy alternatives separately from the timer implementation.
+
+```ts
+import { assessTimeLimit } from '@accessibility-devkit/cognitive';
+
+assessTimeLimit({ warningDurationMs: 20_000, extensionCount: 10 });
 ```
 
 ## Redundant Entry (WCAG 3.3.7)

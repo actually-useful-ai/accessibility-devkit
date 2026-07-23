@@ -88,8 +88,13 @@ test('runs plugin scenarios from the root test command', async () => {
   const workspace = JSON.parse(await read('package.json'));
 
   assert.match(
-    workspace.scripts.test,
+    workspace.scripts['test:docs'],
     /node --test tests\/plugin\/accessibility-scenarios\.test\.mjs/,
   );
-  assert.match(workspace.scripts.test, /pnpm --filter="\.\/packages\/\*" --parallel test/);
+  assert.match(
+    workspace.scripts['test:packages'],
+    /pnpm --filter="\.\/packages\/\*" --parallel test/,
+  );
+  assert.match(workspace.scripts.test, /pnpm test:docs/);
+  assert.match(workspace.scripts.test, /pnpm test:packages/);
 });

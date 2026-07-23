@@ -26,13 +26,13 @@ Start from the core review (native semantics, keyboard and focus, names and role
 
 ## Packages to reach for
 
-| Need                      | Package                                | Key utilities                                                                             |
-| ------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------- |
-| Flash and motion safety   | `@accessibility-devkit/motion`         | `createFlashMeter`, `isUnsafeFlashRate`, `withReducedMotion`, `applyMotionPreference`     |
-| Input and controls        | `@accessibility-devkit/motor`          | `meetsTargetSize`, `makeKeyboardDraggable`, `preventRapidRepeat`, `createDwellActivation` |
-| Captions and audio cues   | `@accessibility-devkit/media`          | `auditMedia`, `hasCaptions`, `ensureAudioControl`                                         |
-| HUD colour and contrast   | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsWCAG`, `simulateColorBlindness`                                 |
-| Assist, checkpoints, undo | `@accessibility-devkit/cognitive`      | `createUndoController`, `createSessionTimeout`                                            |
+| Need                      | Package                                | Key utilities                                                                                  |
+| ------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Flash and motion safety   | `@accessibility-devkit/motion`         | `createFlashMeter`, `exceedsFlashFrequencyLimit`, `withReducedMotion`, `applyMotionPreference` |
+| Input and controls        | `@accessibility-devkit/motor`          | `meetsTargetSize`, `makeKeyboardDraggable`, `preventRapidRepeat`, `createDwellActivation`      |
+| Captions and audio cues   | `@accessibility-devkit/media`          | `auditMedia`, `hasCaptions`, `ensureAudioControl`                                              |
+| HUD colour and contrast   | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsContrastThreshold`, `simulateColorVisionDeficiency`                  |
+| Assist, checkpoints, undo | `@accessibility-devkit/cognitive`      | `createUndoController`, `createSessionTimeout`                                                 |
 
 ## Domain patterns
 

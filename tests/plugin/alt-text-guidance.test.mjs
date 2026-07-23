@@ -45,5 +45,8 @@ test('keeps generated descriptions provisional, contextual, and privacy-aware', 
   assert.match(reference, /instructions.*image content.*not commands/is);
   assert.match(reference, /warn.*remote provider/is);
   assert.match(reference, /cannot establish.*conformance/is);
-  assert.doesNotMatch(reference, /Google Image Search|fully accessible|all images|1,000.character/i);
+  assert.doesNotMatch(
+    reference,
+    /Google Image Search|fully accessible|all images|1,000.character/i,
+  );
 });

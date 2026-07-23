@@ -6,6 +6,12 @@
  * guidance in WCAG 3.1.5.
  */
 
+import {
+  analyzeReadableText,
+  countEnglishSyllables,
+  type ReadableTextAnalysis,
+} from '@accessibility-devkit/core';
+
 // ============================================================
 // Tokenization
 // ============================================================
@@ -31,12 +37,7 @@ function splitWords(text: string): string[] {
  * @returns The estimated syllable count (at least 1 for any real word)
  */
 export function countSyllables(word: string): number {
-  const w = word.toLowerCase().replace(/[^a-z]/g, '');
-  if (!w) return 0;
-  if (w.length <= 3) return 1;
-  const trimmed = w.replace(/(?:[^laeiouy]es|[^laeiouy]ed|[^laeiouy]e)$/, '').replace(/^y/, '');
-  const groups = trimmed.match(/[aeiouy]{1,2}/g);
-  return groups ? groups.length : 1;
+  return countEnglishSyllables(word);
 }
 
 // ============================================================
@@ -44,22 +45,7 @@ export function countSyllables(word: string): number {
 // ============================================================
 
 /** Readability metrics computed from a block of text. */
-export interface ReadabilityScores {
-  sentences: number;
-  words: number;
-  syllables: number;
-  /** Flesch Reading Ease: 0 (very hard) to ~100 (very easy). */
-  fleschReadingEase: number;
-  /** Flesch–Kincaid grade level (US school grade). */
-  fleschKincaidGrade: number;
-  /** Automated Readability Index (US school grade), character-based. */
-  automatedReadabilityIndex: number;
-}
-
-/** Rounds to two decimals to keep scores readable and stable. */
-function round2(n: number): number {
-  return Math.round(n * 100) / 100;
-}
+export interface ReadabilityScores extends ReadableTextAnalysis {}
 
 /**
  * Computes readability metrics for a block of text. Empty or word-less input
@@ -74,36 +60,7 @@ function round2(n: number): number {
  * ```
  */
 export function readabilityScores(text: string): ReadabilityScores {
-  const words = splitWords(text);
-  const sentenceCount = Math.max(splitSentences(text).length, text.trim() ? 1 : 0);
-  const wordCount = words.length;
-
-  if (wordCount === 0 || sentenceCount === 0) {
-    return {
-      sentences: sentenceCount,
-      words: wordCount,
-      syllables: 0,
-      fleschReadingEase: 0,
-      fleschKincaidGrade: 0,
-      automatedReadabilityIndex: 0,
-    };
-  }
-
-  const syllableCount = words.reduce((sum, w) => sum + countSyllables(w), 0);
-  const letters = (text.match(/[A-Za-z0-9]/g) ?? []).length;
-
-  const wordsPerSentence = wordCount / sentenceCount;
-  const syllablesPerWord = syllableCount / wordCount;
-  const lettersPerWord = letters / wordCount;
-
-  return {
-    sentences: sentenceCount,
-    words: wordCount,
-    syllables: syllableCount,
-    fleschReadingEase: round2(206.835 - 1.015 * wordsPerSentence - 84.6 * syllablesPerWord),
-    fleschKincaidGrade: round2(0.39 * wordsPerSentence + 11.8 * syllablesPerWord - 15.59),
-    automatedReadabilityIndex: round2(4.71 * lettersPerWord + 0.5 * wordsPerSentence - 21.43),
-  };
+  return analyzeReadableText(text);
 }
 
 /** A coarse reading-difficulty band. */

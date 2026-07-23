@@ -1,105 +1,49 @@
 # @accessibility-devkit/audit
 
-Runs axe-core accessibility audits, formats results as text/JSON/markdown, and provides a pre-built ESLint flat-config for jsx-a11y.
-
-## Build and test from source
-
-This package is source-only and not yet published to npm. Clone the repository and work with it through the pnpm workspace:
+Browser accessibility audits through axe-core, plus jsx-a11y's maintained recommended flat configuration.
 
 ```bash
-git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-cd accessibility-devkit
-pnpm install
-pnpm --filter @accessibility-devkit/audit build
-pnpm --filter @accessibility-devkit/audit test
+npm install @accessibility-devkit/audit
 ```
 
-The examples below assume you are working from that cloned workspace.
+## Browser audit
 
-## Usage
+```js
+import { formatReport, runAudit } from '@accessibility-devkit/audit';
 
-### runAudit
-
-Runs an axe-core audit on any element context and returns structured results.
-
-```ts
-import { runAudit, formatReport } from '@accessibility-devkit/audit';
-
-// Audit the full document at WCAG AA
 const result = await runAudit(document, { level: 'AA' });
-
-// Print a markdown report
 console.log(formatReport(result, 'markdown'));
+```
 
-// Audit a specific section at AAA, excluding a noisy element
-const result2 = await runAudit('#main-content', {
-  level: 'AAA',
-  exclude: ['#legacy-widget'],
+AA requests the applicable WCAG 2.0, 2.1, and 2.2 axe tags. Results preserve violations, passes, incomplete checks, and inapplicable rules.
+
+```js
+const scoped = await runAudit(document, {
+  level: 'AA',
+  include: ['#checkout'],
+  exclude: ['#known-third-party-widget'],
 });
-
-console.log(result2.summary.critical); // number of critical violations
 ```
 
-### AuditOptions
+`incomplete` is not a pass. Review it manually in the browser and continue with keyboard, screen-reader, zoom, reflow, forced-color, and human testing.
 
-| Property  | Type                   | Default | Description                                             |
-| --------- | ---------------------- | ------- | ------------------------------------------------------- |
-| `level`   | `'A' \| 'AA' \| 'AAA'` | `'AA'`  | WCAG conformance level to test against                  |
-| `tags`    | `string[]`             | `[]`    | Additional axe tag filters applied alongside level tags |
-| `include` | `string[]`             | —       | CSS selectors to include in the audit                   |
-| `exclude` | `string[]`             | —       | CSS selectors to exclude from the audit                 |
-
-### AuditResult
-
-```ts
-interface AuditResult {
-  violations: axe.Result[]; // Rules that failed
-  passes: axe.Result[]; // Rules that passed
-  incomplete: axe.Result[]; // Rules that need manual review
-  inapplicable: axe.Result[]; // Rules not applicable to this context
-  summary: AuditViolationSummary;
-}
-
-interface AuditViolationSummary {
-  total: number;
-  critical: number;
-  serious: number;
-  moderate: number;
-  minor: number;
-}
-```
-
-### formatReport
-
-Formats an `AuditResult` into a readable string.
-
-```ts
-formatReport(result); // plain text (default)
-formatReport(result, 'markdown'); // markdown with tables and code blocks
-formatReport(result, 'json'); // full JSON for tooling
-```
-
-### eslintConfig
-
-Drop-in ESLint flat-config entry that adds all jsx-a11y rules as warnings.
+## ESLint
 
 ```js
 // eslint.config.js
 import { eslintConfig } from '@accessibility-devkit/audit';
 
-export default [
-  eslintConfig,
-  // ...your other config entries
-];
+export default [eslintConfig];
 ```
 
-This adds every rule from `eslint-plugin-jsx-a11y` at the `warn` level, so violations surface during development without blocking builds.
+This is `eslint-plugin-jsx-a11y`'s maintained recommended flat configuration, including its own severities and future updates.
 
-## Dependencies
+For live URLs from a shell, use Deque's maintained CLI instead of adding a browser runtime here:
 
-- [`axe-core`](https://github.com/dequelabs/axe-core) — accessibility rules engine
-- [`eslint-plugin-jsx-a11y`](https://github.com/jsx-eslint/eslint-plugin-jsx-a11y) — static JSX accessibility checks
+```bash
+npx @axe-core/cli https://example.com
+```
 
-## License
+Automated findings cover configured rules only and do not establish conformance.
 
-MIT. Author: Luke Steuber.
+MIT © Luke Steuber.

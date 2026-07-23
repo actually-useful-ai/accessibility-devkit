@@ -7,6 +7,8 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const canonical = 'https://github.com/actually-useful-ai/accessibility-devkit';
 const packageNames = [
+  'core',
+  'cli',
   'audit',
   'components',
   'accommodations',
@@ -21,11 +23,13 @@ async function read(relativePath) {
   return readFile(path.join(root, relativePath), 'utf8');
 }
 
-test('gives Codex desktop users a five-minute plugin quick start', async () => {
+test('leads with one-minute outcomes and keeps tool-specific shortcuts secondary', async () => {
   const readme = await read('README.md');
 
-  assert.match(readme, /## Five-minute quick start/i);
-  assert.match(readme, /Codex desktop app/i);
+  assert.match(readme, /## Start in a minute/i);
+  assert.match(readme, /### Run a check/i);
+  assert.match(readme, /### Import a utility/i);
+  assert.match(readme, /### Add the review workflow/i);
   assert.match(readme, /Plugins Directory/i);
   assert.match(readme, /marketplace.*import|import.*marketplace/i);
   assert.match(readme, /\.claude-plugin\/marketplace\.json/);
@@ -36,7 +40,7 @@ test('gives Codex desktop users a five-minute plugin quick start', async () => {
   assert.match(readme, /Review this interface for accessibility barriers/i);
   assert.match(readme, /Expected (result|output)/i);
   assert.match(readme, /Verif(y|ication)/i);
-  assert.doesNotMatch(readme, /(?:^|\n)\s*codex plugin\b/im);
+  assert.doesNotMatch(readme.split('## Start in a minute')[0], /Codex|Claude|TypeScript/i);
 });
 
 test('offers a repository-backed direct skill fallback and separate Claude commands', async () => {
@@ -98,7 +102,8 @@ test('keeps plugin, skill, and package identifiers valid for the quick start', a
     packages.map(({ name }) => name),
     packageNames.map((name) => `@accessibility-devkit/${name}`),
   );
-  assert.match(workspace.scripts.test, /tests\/docs\/adoption-quick-start\.test\.mjs/);
+  assert.match(workspace.scripts['test:docs'], /tests\/docs\/adoption-quick-start\.test\.mjs/);
+  assert.match(workspace.scripts.test, /pnpm test:docs/);
 });
 
 test('keeps canonical repository metadata accurate', async () => {
@@ -126,28 +131,23 @@ test('keeps canonical repository metadata accurate', async () => {
   }
 });
 
-test('describes every package honestly as source-only workspace software', async () => {
+test('documents installable npm and Python routes without hiding source development', async () => {
   const publicReadmes = ['README.md', ...packageNames.map((name) => `packages/${name}/README.md`)];
 
   for (const relativePath of publicReadmes) {
     const readme = await read(relativePath);
-    assert.match(readme, /source-only/i, relativePath);
-    assert.match(readme, /not yet published/i, relativePath);
-    assert.match(
-      readme,
-      /git clone https:\/\/github\.com\/actually-useful-ai\/accessibility-devkit\.git/i,
-      relativePath,
-    );
-    assert.match(readme, /pnpm install/i, relativePath);
-    assert.match(readme, /pnpm (?:--filter .* )?build/i, relativePath);
-    assert.match(readme, /pnpm (?:--filter .* )?test/i, relativePath);
-    assert.doesNotMatch(
-      readme,
-      /(?:npm install|npm i|pnpm add|yarn add)\s+@accessibility-devkit\//i,
-      relativePath,
-    );
+    assert.match(readme, /npm install|npm i|npx|pipx|pip install/i, relativePath);
+    assert.match(readme, /manual|human|browser|assistive technolog/i, relativePath);
     assert.doesNotMatch(readme, /pnpm release/i, relativePath);
   }
+
+  const readme = await read('README.md');
+  assert.match(readme, /npm install @accessibility-devkit\/core/i);
+  assert.match(readme, /pipx run accessibility-devkit/i);
+  assert.match(readme, /from accessibility_devkit import/i);
+  assert.match(readme, /require\('@accessibility-devkit\/core'\)/i);
+  assert.match(readme, /## v1\.0 to v1\.1 migration/i);
+  assert.match(readme, /JSON Schema 2020-12/i);
 });
 
 test('publishes dual module metadata for every package when releases begin', async () => {
@@ -164,7 +164,9 @@ test('publishes dual module metadata for every package when releases begin', asy
         require: './dist/index.js',
       },
     });
-    assert.equal(packageManifest.publishConfig.access, 'public');
+    assert.deepEqual(packageManifest.publishConfig, { access: 'public', provenance: true });
+    assert.equal(packageManifest.version, '1.1.0');
+    assert.ok(packageManifest.files.includes('LICENSE'));
   }
 });
 
@@ -189,11 +191,9 @@ test('runs a reproducible spelling check for the adoption documentation', async 
   const workspace = JSON.parse(await read('package.json'));
   const cspell = JSON.parse(await read('cspell.json'));
 
-  assert.match(
-    workspace.scripts.spelling,
-    /^cspell --config cspell\.json README\.md examples\/accessible-component-review\.md skills\/accessibility\/references\/\*\.md$/,
-  );
-  assert.match(workspace.scripts.test, /pnpm spelling &&/);
+  assert.match(workspace.scripts.spelling, /packages\/\*\/README\.md/);
+  assert.match(workspace.scripts.spelling, /python\/README\.md/);
+  assert.match(workspace.scripts.test, /test:contracts/);
   assert.ok(cspell.words.includes('Codex'));
   assert.ok(cspell.words.includes('WCAG'));
 });

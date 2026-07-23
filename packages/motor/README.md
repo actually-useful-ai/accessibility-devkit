@@ -2,19 +2,11 @@
 
 Utilities for motor and mobility accommodations: target-size checks, pointer cancellation, keyboard alternatives to dragging, and tremor tolerance. These address barriers for people who use switches, eye-gaze, head pointers, or who have limited dexterity or tremor.
 
-## Build and test from source
-
-This package is source-only and not yet published to npm. Clone the repository and work with it through the pnpm workspace:
-
 ```bash
-git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-cd accessibility-devkit
-pnpm install
-pnpm --filter @accessibility-devkit/motor build
-pnpm --filter @accessibility-devkit/motor test
+npm install @accessibility-devkit/motor
 ```
 
-The examples below assume you are working from that cloned workspace.
+Rendered size checks and interaction helpers identify implementation risks. Verify spacing, exceptions, focus reachability, dwell, repeat timing, and task completion manually with the person's input method and browser.
 
 ## Target Size (WCAG 2.5.8 / 2.5.5)
 

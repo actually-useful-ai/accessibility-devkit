@@ -2,19 +2,11 @@
 
 Accessible UI primitives implemented to spec: focus containment, roving tabindex, screen reader announcements, skip links, dialogs, and menus. Framework-agnostic TypeScript.
 
-## Build and test from source
-
-This package is source-only and not yet published to npm. Clone the repository and work with it through the pnpm workspace:
-
 ```bash
-git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-cd accessibility-devkit
-pnpm install
-pnpm --filter @accessibility-devkit/components build
-pnpm --filter @accessibility-devkit/components test
+npm install @accessibility-devkit/components
 ```
 
-The examples below assume you are working from that cloned workspace.
+These primitives supply interaction mechanics, not finished product behavior. Verify labels, focus placement, dismissal, recovery, visual states, and content manually in the browser and with supported assistive technology.
 
 ## Primitives
 

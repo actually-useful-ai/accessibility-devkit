@@ -1,6 +1,8 @@
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
 
-import { runAudit } from './index';
+import axe from 'axe-core';
+
+import { eslintConfig, runAudit } from './index';
 
 function setMarkup(markup: string): void {
   document.documentElement.lang = 'en';
@@ -73,5 +75,37 @@ describe('runAudit', () => {
     const result = await runAudit('#fixture', { exclude: ['#legacy-widget'] });
 
     expect(violationIds(result)).not.toContain('image-alt');
+  });
+
+  it('requests the WCAG 2.1 and 2.2 AA rule tags', async () => {
+    const run = vi.spyOn(axe, 'run').mockResolvedValueOnce({
+      testEngine: { name: 'axe-core', version: 'test' },
+      testRunner: { name: 'vitest' },
+      testEnvironment: {
+        userAgent: 'vitest',
+        windowWidth: 1024,
+        windowHeight: 768,
+        orientationAngle: 0,
+        orientationType: 'landscape-primary',
+      },
+      timestamp: new Date().toISOString(),
+      url: 'https://example.test',
+      toolOptions: {},
+      passes: [],
+      violations: [],
+      incomplete: [],
+      inapplicable: [],
+    });
+
+    await runAudit(document, { level: 'AA' });
+
+    expect(run.mock.calls[0]?.[1]?.runOnly).toMatchObject({
+      type: 'tag',
+      values: expect.arrayContaining(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']),
+    });
+  });
+
+  it('uses jsx-a11y maintained recommended flat configuration', () => {
+    expect(eslintConfig.rules?.['jsx-a11y/alt-text']).toBe('error');
   });
 });

@@ -1,161 +1,65 @@
 # @accessibility-devkit/accommodations
 
-Utilities for disability accommodations: color blindness simulation, WCAG contrast math, and media-query watchers for user preferences.
-
-## Build and test from source
-
-This package is source-only and not yet published to npm. Clone the repository and work with it through the pnpm workspace:
+Explicit visual and typography preferences, contrast math, text-spacing override tests, and color-vision simulation.
 
 ```bash
-git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-cd accessibility-devkit
-pnpm install
-pnpm --filter @accessibility-devkit/accommodations build
-pnpm --filter @accessibility-devkit/accommodations test
+npm install @accessibility-devkit/accommodations
 ```
 
-The examples below assume you are working from that cloned workspace.
+## Contrast
 
-## Color Blindness Simulation
+```js
+import {
+  findNearestPassingColor,
+  getContrastRatio,
+  meetsContrastThreshold,
+} from '@accessibility-devkit/accommodations';
 
-### simulateColorBlindness
-
-Returns the hex color as it appears to someone with the given color vision deficiency.
-
-```ts
-import { simulateColorBlindness } from '@accessibility-devkit/accommodations';
-
-simulateColorBlindness('#ff0000', 'protanopia'); // red as seen with protanopia
-simulateColorBlindness('#00ff00', 'deuteranomaly'); // green as seen with partial deutan deficiency
+getContrastRatio('#595959', '#ffffff');
+meetsContrastThreshold('#595959', '#ffffff', 'AA', 'normal');
+findNearestPassingColor('#aaaaaa', '#ffffff');
 ```
 
-### ColorBlindType
+Invalid colors throw. Suggestions still need browser and human review in the real palette and every interaction state.
 
-All 7 supported deficiency types:
+## Color-vision deficiency
 
-| Value             | Description                             |
-| ----------------- | --------------------------------------- |
-| `'protanopia'`    | Complete red insensitivity              |
-| `'deuteranopia'`  | Complete green insensitivity            |
-| `'tritanopia'`    | Complete blue insensitivity             |
-| `'achromatopsia'` | Complete color blindness (monochromacy) |
-| `'protanomaly'`   | Partial red insensitivity               |
-| `'deuteranomaly'` | Partial green insensitivity             |
-| `'tritanomaly'`   | Partial blue insensitivity              |
+```js
+import { simulateColorVisionDeficiency } from '@accessibility-devkit/accommodations';
 
-The `-omaly` variants are partial deficiencies; the others are complete loss of that channel.
-
-## Contrast and WCAG Checks
-
-### getContrastRatio
-
-Calculates the WCAG relative luminance contrast ratio between two hex colors. Returns a value between 1 (no contrast) and 21 (black on white).
-
-```ts
-import { getContrastRatio } from '@accessibility-devkit/accommodations';
-
-getContrastRatio('#ffffff', '#000000'); // 21
-getContrastRatio('#777777', '#ffffff'); // ~4.48
+simulateColorVisionDeficiency('#ff6347', 'deuteranopia');
 ```
 
-### meetsWCAG
+Supported simulations are `protanopia`, `deuteranopia`, `tritanopia`, and `achromatopsia`. Simulation is a design-review aid. It does not model CVI, low vision, photophobia, or an individual's perception.
 
-Checks whether a foreground/background pair meets a WCAG contrast threshold.
+The package uses the zero-dependency MIT implementation from `@bjornlu/colorblind`, held behind golden tests.
 
-```ts
-import { meetsWCAG } from '@accessibility-devkit/accommodations';
+## Typography preferences
 
-meetsWCAG('#767676', '#ffffff'); // false — fails AA normal text
-meetsWCAG('#595959', '#ffffff'); // true  — passes AA normal text
-meetsWCAG('#767676', '#ffffff', 'AA', 'large'); // true  — passes AA large text
-meetsWCAG('#595959', '#ffffff', 'AAA'); // false — fails AAA normal text
-```
+```js
+import { applyTypographyPreference } from '@accessibility-devkit/accommodations';
 
-WCAG thresholds: AA normal = 4.5:1, AA large = 3:1, AAA normal = 7:1, AAA large = 4.5:1.
-
-### findAccessibleColor
-
-Adjusts a foreground color (darkening first, then lightening) until it meets the WCAG threshold against the given background. Returns the original color unchanged if it already passes.
-
-```ts
-import { findAccessibleColor } from '@accessibility-devkit/accommodations';
-
-findAccessibleColor('#aaaaaa', '#ffffff'); // returns a darker gray that passes AA
-findAccessibleColor('#aaaaaa', '#ffffff', 'AAA'); // returns an even darker shade for AAA
-```
-
-## Media Query Utilities
-
-### prefersReducedMotion
-
-```ts
-import { prefersReducedMotion } from '@accessibility-devkit/accommodations';
-
-if (prefersReducedMotion()) {
-  // use a simple fade instead of a complex animation
-}
-```
-
-### watchPrefersReducedMotion
-
-Subscribes to changes in `prefers-reduced-motion`. Returns an unsubscribe function.
-
-```ts
-import { watchPrefersReducedMotion } from '@accessibility-devkit/accommodations';
-
-const unsubscribe = watchPrefersReducedMotion((prefers) => {
-  animator.setReduced(prefers);
+const restore = applyTypographyPreference(article, {
+  fontFamily: 'Atkinson Hyperlegible, sans-serif',
+  fontSize: '1.125rem',
+  lineHeight: '1.6',
 });
-
-// When the component unmounts:
-unsubscribe();
 ```
 
-### Other preference checks
+There is no universal dyslexia typeface or spacing preset. Values come from the caller or person and restore cleanly.
 
-```ts
-import { prefersHighContrast, prefersDarkMode } from '@accessibility-devkit/accommodations';
+## Text-spacing test
 
-if (prefersHighContrast()) {
-  /* apply high-contrast theme */
-}
-if (prefersDarkMode()) {
-  /* apply dark theme */
-}
-```
+```js
+import { applyTextSpacingTest } from '@accessibility-devkit/accommodations';
 
-## Readable Typography (WCAG 1.4.12)
-
-### applyDyslexiaFriendlyFont
-
-Applies a dyslexia-friendly font and spacing via inline styles, and returns a function that restores the previous styles. Load the `OpenDyslexic` web font yourself if you want it; the fallbacks work without it.
-
-```ts
-import { applyDyslexiaFriendlyFont } from '@accessibility-devkit/accommodations';
-
-const restore = applyDyslexiaFriendlyFont(article);
-// to undo:
+const restore = applyTextSpacingTest(article);
+// Inspect clipping, overlap, truncation, and lost controls, then restore.
 restore();
 ```
 
-### applyTextSpacing / meetsTextSpacing
+WCAG 1.4.12 requires content to survive the override. It does not require authors to apply these values by default, so this function never returns a conformance result.
 
-Applies the WCAG 1.4.12 text-spacing minimums (line height 1.5, letter spacing 0.12em, word spacing 0.16em) and checks whether an element already meets them.
+Motion preferences live only in [`@accessibility-devkit/motion`](../motion).
 
-```ts
-import { applyTextSpacing, meetsTextSpacing } from '@accessibility-devkit/accommodations';
-
-if (!meetsTextSpacing(article)) {
-  applyTextSpacing(article);
-}
-```
-
-Paragraph spacing (2em following paragraphs) should be set on the paragraph elements themselves.
-
-## Dependencies
-
-- [`color-blind`](https://github.com/skratchdot/color-blind) — color vision deficiency simulation
-
-## License
-
-MIT. Author: Luke Steuber.
+MIT © Luke Steuber.

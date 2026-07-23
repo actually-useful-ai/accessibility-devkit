@@ -240,7 +240,7 @@ export function makeKeyboardDraggable(
  * where a single intended press registers as several.
  *
  * @param handler - The function to guard
- * @param minIntervalMs - Minimum gap between accepted calls (default 500ms)
+ * @param minIntervalMs - Minimum gap between accepted calls, chosen for the interaction and person
  * @returns A wrapped handler that drops rapid repeats
  *
  * @example
@@ -250,8 +250,11 @@ export function makeKeyboardDraggable(
  */
 export function preventRapidRepeat<A extends unknown[]>(
   handler: (...args: A) => void,
-  minIntervalMs = 500,
+  minIntervalMs: number,
 ): (...args: A) => void {
+  if (!Number.isFinite(minIntervalMs) || minIntervalMs < 0) {
+    throw new RangeError('minIntervalMs must be a finite, non-negative number.');
+  }
   let last = 0;
   return (...args: A): void => {
     const now = Date.now();
@@ -262,8 +265,8 @@ export function preventRapidRepeat<A extends unknown[]>(
 }
 
 export interface DwellActivationOptions {
-  /** How long the pointer must rest on the element before activating (default 800ms). */
-  delayMs?: number;
+  /** How long the pointer must rest before activation, chosen for the interaction and person. */
+  delayMs: number;
   /** Called once the dwell completes without the pointer leaving. */
   onActivate: () => void;
 }
@@ -287,7 +290,10 @@ export function createDwellActivation(
   element: HTMLElement,
   options: DwellActivationOptions,
 ): () => void {
-  const delayMs = options.delayMs ?? 800;
+  const delayMs = options.delayMs;
+  if (!Number.isFinite(delayMs) || delayMs < 0) {
+    throw new RangeError('delayMs must be a finite, non-negative number.');
+  }
   let timer: ReturnType<typeof setTimeout> | null = null;
 
   const clear = (): void => {

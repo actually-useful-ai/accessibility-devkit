@@ -1,0 +1,62 @@
+{
+  "name": "@accessibility-devkit/cli",
+  "version": "1.1.0",
+  "description": "Static accessibility checks with explicit manual-review boundaries.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "accessibility-devkit": "./dist/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "cli",
+    "scanner",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actually-useful-ai/accessibility-devkit.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/actually-useful-ai/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/cli#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@accessibility-devkit/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}

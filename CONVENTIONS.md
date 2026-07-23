@@ -13,7 +13,8 @@ These conventions keep the Accessibility Devkit packages consistent and easy to 
 
 Packages use the `@accessibility-devkit` scope.
 
-- **Packages:** `@accessibility-devkit/<name>` (for example, `audit`, `components`, `accommodations`, `motor`, `cognitive`, `language`, `media`, and `motion`)
+- **Packages:** `@accessibility-devkit/<name>` (`core`, `cli`, `audit`, `components`, `accommodations`, `motor`, `cognitive`, `language`, `media`, and `motion`)
+- **Python distribution:** `accessibility-devkit`, imported as `accessibility_devkit`
 
 New disability-domain accommodations live as packages within this repository rather than as separate `accessibility-devkit-<area>` repositories. Name a domain package for the barrier it addresses (`motor`, `cognitive`, `language`, `media`, `motion`), and map each utility to the WCAG success criteria it serves.
 
@@ -38,6 +39,8 @@ accessibility-devkit/
 │   │   └── README.md
 │   └── components/          # Example: @accessibility-devkit/components
 │       └── ...
+├── python/                  # Dependency-free Python distribution and tests
+├── spec/                    # JSON Schema and cross-runtime golden fixtures
 ├── examples/                # Reviewed usage examples
 └── docs/                    # Conceptual documentation
     ├── 01-philosophy.md
@@ -47,11 +50,11 @@ accessibility-devkit/
 
 ## 3. Coding Style & Tooling
 
-- **Language:** Packages use TypeScript.
+- **Languages:** npm packages use TypeScript; the Python package supports Python 3.11+ without runtime dependencies.
 - **Style:** [Prettier](https://prettier.io/) formats source and test files from the root `.prettierrc.json`.
 - **Linting:** [ESLint](https://eslint.org/) runs from `.eslintrc.cjs`.
-- **Build:** `tsup` produces CommonJS, ECMAScript module, and TypeScript declaration output.
-- **Tests:** Vitest runs package tests; jsdom supplies browser APIs where needed.
+- **Build:** `tsup` produces CommonJS, ECMAScript module, declarations, and source maps. Hatchling builds the Python wheel and source distribution.
+- **Tests:** Vitest runs package tests; jsdom supplies browser APIs where needed. `unittest` covers Python, and contract tests validate both runtimes against the same schema and fixtures.
 
 ## 4. Documentation
 
@@ -77,3 +80,5 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 - **Tool:** [Changesets](https://github.com/changesets/changesets) manages package versions and release notes.
 - **Process:** Run `pnpm changeset` for changes that require a package release. Commit the generated file with the implementation.
+- **Version group:** All ten npm packages share one fixed version. The Python distribution and GitHub release use that same version.
+- **Publication:** npm and PyPI release from GitHub-hosted OIDC after the one-time registry bootstrap.

@@ -28,6 +28,7 @@ describe('syllable counting', () => {
 describe('readability scores', () => {
   it('scores a simple sentence as very easy, low grade', () => {
     const scores = readabilityScores('The cat sat on the mat.');
+    expect(scores).toMatchObject({ language: 'en', method: 'english-heuristic' });
     expect(scores.words).toBe(6);
     expect(scores.sentences).toBe(1);
     expect(scores.fleschReadingEase).toBeGreaterThan(90);

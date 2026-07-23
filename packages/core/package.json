@@ -1,0 +1,54 @@
+{
+  "name": "@accessibility-devkit/core",
+  "version": "1.1.0",
+  "description": "Portable accessibility checks for contrast, readable text, flash frequency, and time limits.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --sourcemap --watch",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "contrast",
+    "readability",
+    "timing",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actually-useful-ai/accessibility-devkit.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/actually-useful-ai/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/core#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

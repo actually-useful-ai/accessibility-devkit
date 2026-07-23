@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "errors": 4,
+    "warnings": 3,
+    "info": 0,
+    "findings": 7,
+    "manualChecks": 13
+  },
+  "findings": [
+    "document-language",
+    "duplicate-id",
+    "image-alt-missing",
+    "form-label",
+    "focus-positive-tabindex",
+    "heading-order",
+    "link-purpose"
+  ],
+  "manualChecks": [
+    "color-only-communication",
+    "contrast-rendered",
+    "landmark-structure",
+    "image-alt-empty-context",
+    "table-headers-context",
+    "target-size-spacing",
+    "cvi-individual-profile",
+    "cvi-visual-complexity",
+    "cvi-fatigue-motion",
+    "cvi-multisensory-alternatives",
+    "switch-control-verification",
+    "switch-timing-preferences",
+    "switch-simple-action"
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/actually-useful-ai/accessibility-devkit/spec/report.schema.json",
+  "title": "Accessibility Devkit report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "producer", "target", "summary", "findings", "manualChecks"],
+  "properties": {
+    "schemaVersion": { "const": "1.0.0" },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "runtime"],
+      "properties": {
+        "name": { "const": "accessibility-devkit" },
+        "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "runtime": { "enum": ["node", "python"] }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": { "enum": ["file", "stdin", "text", "colors", "policy"] },
+        "value": { "type": "string" }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["errors", "warnings", "info", "findings", "manualChecks"],
+      "properties": {
+        "errors": { "type": "integer", "minimum": 0 },
+        "warnings": { "type": "integer", "minimum": 0 },
+        "info": { "type": "integer", "minimum": 0 },
+        "findings": { "type": "integer", "minimum": 0 },
+        "manualChecks": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/item" } },
+    "manualChecks": { "type": "array", "items": { "$ref": "#/$defs/item" } }
+  },
+  "$defs": {
+    "location": {
+      "type": ["object", "null"],
+      "required": ["line", "column"],
+      "properties": {
+        "line": { "type": "integer", "minimum": 1 },
+        "column": { "type": "integer", "minimum": 1 },
+        "excerpt": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ruleId",
+        "classification",
+        "certainty",
+        "severity",
+        "evidence",
+        "message",
+        "wcag",
+        "location",
+        "remediation",
+        "verification"
+      ],
+      "properties": {
+        "ruleId": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "classification": { "enum": ["normative", "advisory", "supplemental"] },
+        "certainty": { "enum": ["detected", "potential", "manual"] },
+        "severity": { "enum": ["error", "warning", "info"] },
+        "evidence": { "enum": ["source", "computed", "runtime", "human"] },
+        "message": { "type": "string", "minLength": 1 },
+        "wcag": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "location": { "$ref": "#/$defs/location" },
+        "remediation": { "type": "string", "minLength": 1 },
+        "verification": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

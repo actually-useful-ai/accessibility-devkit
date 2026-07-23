@@ -1,59 +1,36 @@
-# The Layered Approach
+# The layered approach
 
-Accessibility Devkit has three layers. Each addresses a different part of implementation and can work alone or with the others.
+Accessibility Devkit separates checks by the evidence they can produce. Each layer can stand alone; together they make gaps visible instead of hiding them behind one score.
 
-## Layer 1: Testing and Auditing (`@accessibility-devkit/audit`)
+## 1. Portable checks and static review
 
-This layer is about catching problems early. It integrates into the developer's existing workflow through linting and automated testing.
+`@accessibility-devkit/core`, `@accessibility-devkit/cli`, and the Python `accessibility-devkit` distribution cover deterministic contrast, timing, readable-text, and flash-frequency checks plus conservative source scanning.
 
-**What it includes:**
+Node and Python use the same report schema, finding identities, manual checks, and exit codes. Static source evidence can detect a missing `alt` attribute or duplicate `id`. It cannot measure rendered contrast, prove target spacing, run Switch Control, or understand an individual's CVI profile. Those limits stay in `manualChecks`.
 
-A pre-configured `axe-core` integration for running accessibility audits against rendered DOM. This can be used in unit tests, integration tests, or as a standalone CLI tool. It also includes a pre-configured `eslint-plugin-jsx-a11y` ruleset for catching common accessibility issues in JSX at the linting stage, before the code even runs.
+## 2. Rendered browser auditing
 
-**When to use it:**
+`@accessibility-devkit/audit` runs axe-core against a rendered DOM and preserves incomplete results. It also exports jsx-a11y's maintained recommended flat configuration.
 
-Every project should use this layer. It is the foundation of an accessible development workflow.
+Rendered automation catches more than source scanning, but it still covers only configured rules. Keep incomplete results and continue with keyboard, assistive-technology, zoom, reflow, forced-color, motion, and human testing.
 
-## Layer 2: Components and Patterns (`@accessibility-devkit/components`)
+## 3. Interaction primitives
 
-This layer provides the building blocks for accessible interfaces. It includes unstyled, framework-agnostic component patterns that handle the complex ARIA and keyboard interaction logic.
+`@accessibility-devkit/components` supplies focus traps, roving tabindex, live announcements, skip links, dialogs, and menus. These are unstyled mechanics rather than complete components.
 
-**What it includes:**
+Names, content, focus placement, dismissal, error recovery, visual states, and product-specific behavior remain the implementer's responsibility.
 
-Focus management utilities (wrapping `focus-trap`), a skip navigation component, a live region announcer for screen readers, and keyboard navigation helpers. These are not styled components; they are behavioral primitives that can be composed into any design system.
+## 4. Focused browser utilities
 
-**When to use it:**
+- `accommodations`: caller-selected typography, text-spacing override tests, contrast, and color-vision simulation.
+- `motor`: target measurement, pointer cancellation, keyboard dragging alternatives, explicit repeat filtering, and explicit dwell timing.
+- `cognitive`: time-limit assessment, session helpers, repeated-entry memory, authentication support, and undo.
+- `language`: English-specific readability clues, long sentences, complex words, and abbreviations.
+- `media`: captions, descriptions, transcripts, autoplay-audio review, and controls.
+- `motion`: reduced-motion behavior, calm scrolling, and flash-frequency screening.
 
-Use this layer when building custom interactive components like modals, dropdowns, tabs, or any element that requires keyboard navigation and screen reader support.
+These packages address different barriers; they are not disability presets. CVI, color-vision deficiency, low vision, and photophobia stay distinct. Timing values come from the interaction and person rather than a universal default.
 
-## Layer 3: Accommodations by disability domain
+## Closing the loop
 
-This layer addresses specific disability needs that go beyond structural accessibility. Most accessibility tooling stops at visual and structural checks. This layer also covers motor, cognitive, sensory, literacy, and vestibular access. It is a family of small, framework-agnostic packages, each mapped to the WCAG success criteria it serves.
-
-### `@accessibility-devkit/accommodations`
-
-Color and perception: color blindness simulation (protanopia, deuteranopia, tritanopia, and the partial variants), WCAG contrast math, automatic color adjustment, system-preference detection (`prefers-reduced-motion`, `prefers-contrast`, `prefers-color-scheme`), dyslexia-friendly typography, and WCAG 1.4.12 text spacing.
-
-### `@accessibility-devkit/motor`
-
-Motor and mobility: target-size checks (2.5.8 / 2.5.5), pointer cancellation (2.5.2), a keyboard alternative to dragging (2.5.7), and tremor tolerance (rapid-repeat suppression, dwell activation). For people who use switches, eye-gaze, head pointers, or who have limited dexterity or tremor.
-
-### `@accessibility-devkit/cognitive`
-
-Cognitive load: adjustable session timeouts with warnings (2.2.1 / 2.2.6), redundant-entry memory (3.3.7), accessible-authentication helpers (3.3.8), and an undo controller for reversible actions (3.3.4 / 3.3.6).
-
-### `@accessibility-devkit/language`
-
-Reading level and literacy: readability scoring (Flesch Reading Ease, Flesch–Kincaid grade, Automated Readability Index), plain-language flags for long sentences and complex words, and abbreviation annotation (3.1.4).
-
-### `@accessibility-devkit/media`
-
-Auditory and media access: caption and audio-description checks (1.2.2 / 1.2.5), autoplay-audio detection and an injected pause control (1.4.2), and transcript association.
-
-### `@accessibility-devkit/motion`
-
-Seizure and vestibular safety: reduced-motion gating (2.3.3), motion-safe scrolling, and flash-rate metering against the three-per-second threshold (2.3.1).
-
-**When to use it:**
-
-Use these packages when you need to go beyond a baseline WCAG scan and actively accommodate specific user needs. Reach for the package that matches the barrier — motor, cognitive, language, media, motion, or general perception — and compose them as your interface requires.
+The review workflow ties the layers together: inspect source, run deterministic and browser checks, fix what the evidence supports, then list the keyboard, assistive-technology, profile-specific, and human verification that remains. A result is useful when another person can tell what was checked and what was not.

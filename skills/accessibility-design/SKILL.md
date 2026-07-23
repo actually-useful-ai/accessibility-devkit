@@ -26,19 +26,19 @@ Start from the core review, then apply the priorities below. Much of design's ac
 
 ## Packages to reach for
 
-| Need                               | Package                                | Key utilities                                                                    |
-| ---------------------------------- | -------------------------------------- | -------------------------------------------------------------------------------- |
-| Color, contrast, colorblind checks | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsWCAG`, `findAccessibleColor`, `simulateColorBlindness` |
-| Typography and text spacing        | `@accessibility-devkit/accommodations` | `applyDyslexiaFriendlyFont`, `applyTextSpacing`, `meetsTextSpacing`              |
-| Motion budget and reduced motion   | `@accessibility-devkit/motion`         | `withReducedMotion`, `applyMotionPreference`, `safeScrollIntoView`               |
-| Target size in specs               | `@accessibility-devkit/motor`          | `meetsTargetSize`, `getTargetSize`, `findUndersizedTargets`                      |
-| Behavioural component primitives   | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`        |
-| Reading level of content design    | `@accessibility-devkit/language`       | `readingLevel`, `findLongSentences`                                              |
+| Need                             | Package                                | Key utilities                                                                                            |
+| -------------------------------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| Color and contrast checks        | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsContrastThreshold`, `findNearestPassingColor`, `simulateColorVisionDeficiency` |
+| Typography and text spacing      | `@accessibility-devkit/accommodations` | `applyTypographyPreference`, `applyTextSpacingTest`                                                      |
+| Motion budget and reduced motion | `@accessibility-devkit/motion`         | `withReducedMotion`, `applyMotionPreference`, `safeScrollIntoView`                                       |
+| Target size in specs             | `@accessibility-devkit/motor`          | `meetsTargetSize`, `getTargetSize`, `findUndersizedTargets`                                              |
+| Behavioural component primitives | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`                                |
+| Reading level of content design  | `@accessibility-devkit/language`       | `readingLevel`, `findLongSentences`                                                                      |
 
 ## Domain patterns
 
 - A color system whose token pairs are contrast-verified, each status color paired with a non-color cue and checked under color-blindness simulation.
-- A type scale validated against the text-spacing overrides, with a dyslexia-friendly alternative documented.
+- A type scale validated against the text-spacing overrides, with caller-selected typography preferences documented.
 - A motion budget in the system: allowed durations and effects, each with a reduced-motion fallback.
 - A visible, consistent focus indicator defined as a token and shown in every component state.
 - Component specs that name focus, target size, keyboard behaviour, and non-color cues as first-class fields.

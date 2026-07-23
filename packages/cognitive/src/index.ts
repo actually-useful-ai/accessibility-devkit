@@ -7,6 +7,12 @@
  * attention-related disabilities.
  */
 
+export {
+  assessTimeLimit,
+  type TimeLimitAssessment,
+  type TimeLimitPolicy,
+} from '@accessibility-devkit/core';
+
 // ============================================================
 // Session Timeout (WCAG 2.2.1 Timing Adjustable, 2.2.6 Timeouts)
 // ============================================================
@@ -39,9 +45,10 @@ export interface SessionTimeout {
 }
 
 /**
- * Warns before a session times out and gives the person a way to extend it,
- * satisfying WCAG 2.2.1 (timing adjustable) and 2.2.6 (timeouts). Any activity
- * in `activityEvents` — or an explicit `extend()` — restarts the countdown.
+ * Warns before a session times out and gives the person a way to extend it.
+ * This is an implementation helper, not proof of WCAG 2.2.1 conformance; use
+ * `assessTimeLimit()` to evaluate the deterministic policy boundaries. Any
+ * activity in `activityEvents` — or an explicit `extend()` — restarts the countdown.
  *
  * @param options - Timing, callbacks, and activity configuration
  * @returns A controller with `extend()` and `stop()`

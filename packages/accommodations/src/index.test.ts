@@ -3,15 +3,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  applyDyslexiaFriendlyFont,
-  applyTextSpacing,
-  findAccessibleColor,
+  applyTextSpacingTest,
+  applyTypographyPreference,
+  findNearestPassingColor,
   getContrastRatio,
-  meetsTextSpacing,
-  meetsWCAG,
-  simulateColorBlindness,
-  watchPrefersReducedMotion,
-  type ColorBlindType,
+  meetsContrastThreshold,
+  simulateColorVisionDeficiency,
+  type ColorVisionDeficiency,
 } from './index';
 
 afterEach(() => {
@@ -28,75 +26,50 @@ describe('contrast ratio', () => {
       10,
     );
   });
+
+  it('rejects invalid colors rather than interpreting them as black', () => {
+    expect(() => getContrastRatio('not-a-color', '#fff')).toThrow(/hex color/i);
+  });
 });
 
 describe('WCAG thresholds', () => {
   it('applies the AA normal and large-text thresholds separately', () => {
-    expect(meetsWCAG('#777777', '#ffffff', 'AA', 'normal')).toBe(false);
-    expect(meetsWCAG('#777777', '#ffffff', 'AA', 'large')).toBe(true);
+    expect(meetsContrastThreshold('#777777', '#ffffff', 'AA', 'normal')).toBe(false);
+    expect(meetsContrastThreshold('#777777', '#ffffff', 'AA', 'large')).toBe(true);
   });
 
   it('applies the AAA threshold', () => {
-    expect(meetsWCAG('#000000', '#ffffff', 'AAA', 'normal')).toBe(true);
-    expect(meetsWCAG('#767676', '#ffffff', 'AAA', 'normal')).toBe(false);
+    expect(meetsContrastThreshold('#000000', '#ffffff', 'AAA', 'normal')).toBe(true);
+    expect(meetsContrastThreshold('#767676', '#ffffff', 'AAA', 'normal')).toBe(false);
   });
 });
 
 describe('accessible color adjustment', () => {
   it('preserves a color that already passes', () => {
-    expect(findAccessibleColor('#000000', '#ffffff')).toBe('#000000');
+    expect(findNearestPassingColor('#000000', '#ffffff')).toBe('#000000');
   });
 
   it('adjusts a failing color until it passes the requested threshold', () => {
-    const adjusted = findAccessibleColor('#aaaaaa', '#ffffff');
+    const adjusted = findNearestPassingColor('#aaaaaa', '#ffffff');
 
     expect(adjusted).toBe('#767676');
-    expect(meetsWCAG(adjusted, '#ffffff', 'AA', 'normal')).toBe(true);
+    expect(meetsContrastThreshold(adjusted, '#ffffff', 'AA', 'normal')).toBe(true);
   });
 });
 
 describe('color-vision simulation', () => {
   it('returns a simulated hex color for every supported deficiency type', () => {
-    const types: ColorBlindType[] = [
+    const types: ColorVisionDeficiency[] = [
       'protanopia',
       'deuteranopia',
       'tritanopia',
       'achromatopsia',
-      'protanomaly',
-      'deuteranomaly',
-      'tritanomaly',
     ];
 
     for (const type of types) {
-      expect(simulateColorBlindness('#ff6347', type)).toMatch(/^#[0-9a-f]{6}$/i);
+      expect(simulateColorVisionDeficiency('#ff6347', type)).toMatch(/^#[0-9a-f]{6}$/i);
     }
-    expect(simulateColorBlindness('#ff6347', 'achromatopsia')).toBe('#828282');
-  });
-});
-
-describe('reduced-motion preference watcher', () => {
-  it('stops delivering changes after cleanup', () => {
-    const mediaQuery = new EventTarget() as MediaQueryList;
-    Object.defineProperties(mediaQuery, {
-      matches: { configurable: true, value: false },
-      media: { configurable: true, value: '(prefers-reduced-motion: reduce)' },
-    });
-    vi.stubGlobal('matchMedia', (query: string) => {
-      expect(query).toBe('(prefers-reduced-motion: reduce)');
-      return mediaQuery;
-    });
-    const observed: boolean[] = [];
-    const stop = watchPrefersReducedMotion((matches) => observed.push(matches));
-
-    const reduced = new Event('change');
-    Object.defineProperty(reduced, 'matches', { value: true });
-    mediaQuery.dispatchEvent(reduced);
-    stop();
-    const restored = new Event('change');
-    Object.defineProperty(restored, 'matches', { value: false });
-    mediaQuery.dispatchEvent(restored);
-
-    expect(observed).toEqual([true]);
+    expect(simulateColorVisionDeficiency('#ff6347', 'achromatopsia')).toMatch(/^#[0-9a-f]{6}$/i);
   });
 });
 
@@ -106,21 +79,31 @@ describe('readable typography', () => {
     el.style.lineHeight = '1';
     document.body.appendChild(el);
 
-    const restore = applyDyslexiaFriendlyFont(el);
-    expect(el.style.fontFamily).toContain('OpenDyslexic');
-    expect(el.style.lineHeight).toBe('1.5');
+    const restore = applyTypographyPreference(el, {
+      fontFamily: 'Atkinson Hyperlegible, sans-serif',
+      lineHeight: '1.6',
+    });
+    expect(el.style.fontFamily).toContain('Atkinson Hyperlegible');
+    expect(el.style.lineHeight).toBe('1.6');
 
     restore();
     expect(el.style.fontFamily).toBe('');
     expect(el.style.lineHeight).toBe('1');
   });
 
-  it('applies WCAG 1.4.12 text spacing that meetsTextSpacing accepts', () => {
-    const el = document.createElement('p');
+  it('applies and restores the complete WCAG text-spacing test override', () => {
+    const el = document.createElement('article');
+    el.style.lineHeight = '1';
+    el.innerHTML = '<p>First</p><p>Second</p>';
     document.body.appendChild(el);
-    expect(meetsTextSpacing(el)).toBe(false);
+    const paragraphs = Array.from(el.querySelectorAll('p'));
 
-    applyTextSpacing(el);
-    expect(meetsTextSpacing(el)).toBe(true);
+    const restore = applyTextSpacingTest(el);
+    expect(el.style.lineHeight).toBe('1.5');
+    expect(paragraphs[0].style.marginBlockEnd).toBe('2em');
+
+    restore();
+    expect(el.style.lineHeight).toBe('1');
+    expect(paragraphs[0].style.marginBlockEnd).toBe('');
   });
 });

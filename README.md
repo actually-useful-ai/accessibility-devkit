@@ -1,45 +1,105 @@
-# accessibility-devkit
+# Accessibility Devkit
 
 [![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue.svg)](https://www.w3.org/TR/WCAG22/)
+[![Release](https://img.shields.io/badge/release-v1.1.0-blue.svg)](https://github.com/actually-useful-ai/accessibility-devkit/releases/tag/v1.1.0)
 
-Not another overlay widget. Not a snippet pack. This is a collection of code-level tools, interaction patterns, and runtime utilities for building accessible applications from the ground up.
+Accessibility is the distance between intention and outcome. Accessibility Devkit helps shorten that distance with portable checks, focused browser utilities, and a review workflow that says exactly what still needs a browser, assistive technology, or a person.
 
-Accessibility technical debt compounds fast. It's expensive to retrofit, and it locks real people out of what you built. Building it in from the start is easier than fixing it later. It's also the right thing to do.
+Accessibility Devkit ships no overlay and assigns no accessibility score. A clean result only means the covered checks found nothing. You still need the listed browser, assistive-technology, and human verification.
 
-Eight packages of framework-agnostic TypeScript, each mapped to specific WCAG 2.x success criteria. Most tools cover visual and structural access, then stop. These go further, into motor, cognitive, sensory, literacy, and vestibular access.
+## Start in a minute
 
----
+### Run a check
 
-## Five-minute quick start
+Use either runtime. The commands, JSON schema, findings, and exit codes match.
 
-The plugin is the quickest way to bring the review workflow into a task. The optional TypeScript packages below are separate and currently available from this source workspace only.
+```bash
+npx @accessibility-devkit/cli contrast '#595959' '#ffffff'
+pipx run accessibility-devkit contrast '#595959' '#ffffff'
+```
 
-### Codex desktop app
+Scan local HTML and add the profiles that need more than a generic source check:
 
-1. Clone this repository and open it in the Codex desktop app.
+```bash
+npx @accessibility-devkit/cli scan ./index.html --profile all
+pipx run accessibility-devkit scan ./index.html --profile cvi --format json
+```
 
-   ```bash
-   git clone https://github.com/actually-useful-ai/accessibility-devkit.git
-   ```
+Live URLs need a browser. The CLI deliberately hands that work to Deque's maintained runner:
 
-2. Open **Plugins**, then the **Plugins Directory**. Use the marketplace import flow and select this repository’s `.claude-plugin/marketplace.json` file. Choose **Accessibility** and install it.
-3. Start a new task and use this first prompt:
+```bash
+npx @axe-core/cli https://example.com
+```
 
-   ```text
-   $accessibility Review this interface for accessibility barriers. Start with semantics, keyboard behavior, focus, error recovery, and target size. Make the smallest practical fixes and name the manual checks still needed.
-   ```
+### Import a utility
 
-   **Expected output:** a short, evidence-based list of barriers, a focused patch or implementation plan, the people and interaction modes affected, and a checklist of the manual checks that remain.
+```bash
+npm install @accessibility-devkit/core
+```
 
-4. Verify the install by opening a fresh task: **Accessibility** should appear in the skill picker, and the prompt should produce a review that distinguishes completed checks from checks that still need a browser, assistive technology, or people who use the interface.
+Plain JavaScript with ECMAScript modules:
 
-For current desktop-app details, see the official [OpenAI Plugins documentation](https://learn.chatgpt.com/docs/plugins).
+```js
+import { getContrastRatio, meetsContrastThreshold } from '@accessibility-devkit/core';
 
-### Direct skill fallback
+const ratio = getContrastRatio('#595959', '#ffffff');
+const passes = meetsContrastThreshold('#595959', '#ffffff', 'AA', 'normal');
+```
 
-If the marketplace import is unavailable, make the repository’s skill discoverable directly. From the cloned repository:
+CommonJS:
+
+```js
+const { assessTimeLimit } = require('@accessibility-devkit/core');
+
+const result = assessTimeLimit({ warningDurationMs: 20_000, extensionCount: 10 });
+```
+
+TypeScript:
+
+```ts
+import { assessTimeLimit, type TimeLimitPolicy } from '@accessibility-devkit/core';
+
+const policy: TimeLimitPolicy = { adjustmentMultiplier: 10 };
+console.log(assessTimeLimit(policy));
+```
+
+Python:
+
+```bash
+python -m pip install accessibility-devkit
+```
+
+```python
+from accessibility_devkit import get_contrast_ratio, meets_contrast_threshold
+
+ratio = get_contrast_ratio("#595959", "#ffffff")
+passes = meets_contrast_threshold("#595959", "#ffffff", "AA", "normal")
+```
+
+### Add the review workflow
+
+Clone the repository, then install the included Accessibility plugin through your coding tool's local marketplace flow:
+
+```bash
+git clone https://github.com/actually-useful-ai/accessibility-devkit.git
+```
+
+The portable review source is [`skills/accessibility`](skills/accessibility). Codex can import [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json) from the Plugins Directory. Claude Code can use:
+
+```text
+/plugin marketplace add actually-useful-ai/accessibility-devkit
+/plugin install accessibility@accessibility-devkit
+```
+
+Start with:
+
+```text
+$accessibility Review this interface for accessibility barriers. Start with semantics, keyboard behavior, focus, error recovery, and target size. Make the smallest practical fixes and name the manual checks still needed.
+```
+
+Expected output: evidence-backed findings, focused changes or a practical plan, affected interaction modes, and a clear list of unverified checks. In a fresh task, verify that **Accessibility** appears in the skill picker and that the review separates completed evidence from planned or unverified work. Current Codex steps are in the [OpenAI Plugins documentation](https://learn.chatgpt.com/docs/plugins).
+
+If marketplace import is unavailable, link the skill without replacing anything already installed:
 
 ```bash
 skill_source="$PWD/skills/accessibility"
@@ -53,285 +113,141 @@ if [ -e "$target" ] || [ -L "$target" ]; then
   exit 1
 fi
 
-if [ ! -d "$skill_source" ]; then
-  printf 'Stopped: expected skill directory is missing: %s\n' "$skill_source"
-  exit 1
-fi
-
 mkdir -p "$HOME/.agents/skills"
 ln -s "$skill_source" "$target"
 ```
 
-The guard catches both existing entries and broken symlinks before making a change. It will never overwrite an entry or nest a link inside it. Codex scans `~/.agents/skills`; restart the app if **Accessibility** does not appear in the skill picker after linking it. Use the same first prompt above to verify it.
+The guard will never overwrite an entry or nest a link inside it.
 
-### Claude Code
+## CLI commands
 
-Claude Code uses its own marketplace commands. Run these in Claude Code, then use the same first prompt:
+Node 22+ and Python 3.11+ expose the same interface:
 
 ```text
-/plugin marketplace add actually-useful-ai/accessibility-devkit
-/plugin install accessibility@accessibility-devkit
+accessibility-devkit scan <files...> [--profile cvi|switch|all] [--format text|json]
+accessibility-devkit contrast <foreground> <background> [--level AA|AAA] [--text-size normal|large]
+accessibility-devkit readability <file|->
+accessibility-devkit timing <policy.json>
 ```
 
----
+Every command accepts `--fail-on error|warning|never`.
 
-## Specialize for your project
+- Exit `0`: the selected failure threshold has no matching automated findings.
+- Exit `1`: at least one automated finding meets the threshold.
+- Exit `2`: the input, command, or runtime failed.
+- Manual checks never fail CI.
 
-Two entry points, depending on how you work.
+`readability` uses English-specific formulas. `timing` evaluates the deterministic WCAG 2.2.1 alternatives: disable the limit, allow at least 10× adjustment, or warn for at least 20 seconds with at least ten extensions. Essential and real-time exceptions stay manual.
 
-**Working with an agent (Claude Code, Codex).** Install the plugin above and run the first prompt. The `accessibility` skill reviews your interface, and when the project has a clear shape it hands off to a specialist that re-weights the review for your context. Each specialist keeps the same evidence and verification discipline; it just changes what to check first.
+## Profiles that need more than a scan
 
-| If you're building…                        | Specialist skill         | What it puts first                                                                     |
-| ------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------- |
-| A game or real-time interactive experience | `accessibility-gaming`   | Flash safety, input remapping, captions for audio cues, assist and difficulty modes    |
-| Enterprise, SaaS, or internal tools        | `accessibility-business` | Forms, session timeouts, authentication, error recovery, conformance evidence          |
-| Visual design or a design system           | `accessibility-design`   | Color and contrast, typography, motion budgets, accessible component specs             |
-| A mobile or touch-first web app            | `accessibility-mobile`   | Target size, gesture alternatives, orientation and reflow, zoom, mobile screen readers |
+Profiles keep specialized review visible without pretending it can be reduced to one threshold.
 
-Ask for a specialist by name, or let the general skill route you. Design work also leans on the separate [`intentional-ux`](https://github.com/actually-useful-ai/intentional-ux) skill for flow and decision-cost questions.
+| Profile or need         | What the tools can detect                                                                   | What still needs verification                                                                                 |
+| ----------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Switch access           | Positive focus order, source-visible pointer-only risks, timing-policy boundaries           | System Switch Control, scan speed, dwell, repeat filtering, simple-action completion                          |
+| CVI                     | Exact WCAG checks where the source supplies measurable evidence                             | Individual profile, visual complexity, salience, fatigue, clutter, latency, motion, multisensory alternatives |
+| Color-vision deficiency | Four simulation modes and exact color contrast math                                         | Meaning beyond color, real components and states, individual perception                                       |
+| Motion and flash        | Reduced-motion preference handling and frequency screening                                  | Flash luminance, area, saturated red, vestibular comfort, content context                                     |
+| Cognitive access        | Time-limit policies, blocked paste, repeated entry, undo helpers, English readability clues | Comprehension, attention demands, recovery, pacing, fatigue, real task completion                             |
 
-**Writing code directly.** Reach for the package that matches the barrier:
+CVI is not color-vision deficiency. Low vision and photophobia are also distinct. The Devkit keeps their language and verification separate.
 
-| Barrier                                                      | Package          |
-| ------------------------------------------------------------ | ---------------- |
-| Small tap targets, drag-only interactions, tremor            | `motor`          |
-| Sessions timing out, re-entered data, blocked paste, no undo | `cognitive`      |
-| Text too hard to read, unexpanded abbreviations              | `language`       |
-| Missing captions, autoplaying sound                          | `media`          |
-| Flashing, parallax, motion sickness                          | `motion`         |
-| Low contrast, color-only meaning, hard-to-read type          | `accommodations` |
-| Focus traps, dialogs, menus, skip links, live regions        | `components`     |
-| Automated WCAG scanning and CI gates                         | `audit`          |
+## Package map
 
-The two axes compose: the specialists (what you're building) prioritize the packages (what human need is served). Each package section below links to its full API reference.
+### Portable core and command line
 
-## Optional TypeScript packages
+| Package                                       | Purpose                                                                                         |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [`@accessibility-devkit/core`](packages/core) | Contrast, English readability analysis, flash-frequency screening, and timing-policy assessment |
+| [`@accessibility-devkit/cli`](packages/cli)   | Conservative static scans and the shared command-line report contract                           |
+| [`accessibility-devkit`](python)              | Dependency-free Python core and CLI with the same commands and contract                         |
 
-### [@accessibility-devkit/audit](./packages/audit)
+### Focused browser packages
 
-Runs axe-core accessibility audits and formats the results. Fits into CI pipelines, PR workflows, or one-off spot checks.
+| Package                                                           | Purpose                                                                                             |
+| ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [`@accessibility-devkit/audit`](packages/audit)                   | axe-core browser audits and jsx-a11y's maintained flat configuration                                |
+| [`@accessibility-devkit/components`](packages/components)         | Focus traps, roving tabindex, dialogs, menus, skip links, and live announcements                    |
+| [`@accessibility-devkit/accommodations`](packages/accommodations) | Explicit typography preferences, text-spacing override tests, contrast, and color-vision simulation |
+| [`@accessibility-devkit/motor`](packages/motor)                   | Target measurement, pointer cancellation, drag alternatives, dwell, and repeat filtering            |
+| [`@accessibility-devkit/cognitive`](packages/cognitive)           | Timing policy, session helpers, repeated-entry memory, authentication, and undo                     |
+| [`@accessibility-devkit/language`](packages/language)             | English readability clues, long-sentence flags, complex words, and abbreviations                    |
+| [`@accessibility-devkit/media`](packages/media)                   | Captions, transcripts, autoplay-audio review, and media controls                                    |
+| [`@accessibility-devkit/motion`](packages/motion)                 | Reduced-motion behavior, safe scrolling, and flash-frequency screening                              |
 
-- **axe-core runner** with configurable WCAG conformance level (A, AA, or AAA)
-- **Scoped audits**: include or exclude selectors to audit one section at a time
-- **Structured results**: violations include severity counts (critical, serious, moderate, minor), not just pass/fail
-- **Three report formats**: plain text for the console, markdown for docs and PRs, JSON for pipelines
-- **ESLint flat-config** for jsx-a11y: add it to `eslint.config.js` to surface JSX accessibility rules as warnings without blocking builds
+All ten npm packages publish ECMAScript modules, CommonJS, TypeScript declarations, source maps, a README, and the full MIT license.
 
-```ts
-import { runAudit, formatReport } from '@accessibility-devkit/audit';
+## Report contract
 
-const result = await runAudit(document, { level: 'AA' });
-console.log(formatReport(result, 'markdown'));
-console.log(`${result.summary.critical} critical, ${result.summary.serious} serious`);
+The versioned contract lives at [`spec/report.schema.json`](spec/report.schema.json) and uses JSON Schema 2020-12. Golden fixtures in [`spec/fixtures`](spec/fixtures) keep the Node and Python implementations aligned.
 
-// Audit a specific section, skip a noisy element
-const scoped = await runAudit('#main-content', {
-  level: 'AAA',
-  exclude: ['#legacy-widget'],
-});
-```
+Reports include:
 
----
+- schema, producer, runtime, and target metadata;
+- a summary with no synthetic accessibility score;
+- findings classified as `normative`, `advisory`, or `supplemental`;
+- certainty of `detected`, `potential`, or `manual`;
+- severity, evidence level, WCAG references, location, remediation, and verification;
+- a separate `manualChecks` collection.
 
-### [@accessibility-devkit/components](./packages/components)
+The scanner is conservative by design. An empty `alt` can be intentional. A small source dimension does not prove a target-size failure without rendered spacing and exception review. A nested `<header>` is not a second banner. An unnamed `<section>` is not a defect. Words such as “autoplay” or “animation” in prose are not executable timing evidence.
 
-Accessible UI primitives cover interaction patterns that are tedious to get right and painful to get wrong.
+## Evidence boundaries
 
-- **FocusTrap** confines keyboard focus to a container such as a modal or drawer. It supports initial focus targeting, pause and resume for nested modals, and focus restoration on deactivation
-- **Roving Tabindex** adds arrow-key navigation to composite widgets such as toolbars, tab lists, radio groups, and menus. Tab exits the group. Wrap-around and cleanup are built in
-- **Screen Reader Announcements** post messages to an ARIA live region. Use polite updates for status and assertive updates for errors. The utility creates one region and reuses it
-- **Skip Link** stays visually hidden until keyboard focus, then jumps past navigation to main content
-- **AccessibleDialog** wraps `<dialog>` or `role="dialog"` elements with focus trapping, ARIA attributes, and Escape-key dismissal
-- **AccessibleMenu** provides a disclosure-style dropdown with expanded state, arrow-key navigation, Escape handling, and outside-click dismissal
+Automation catches a useful subset of accessibility barriers. It cannot establish full conformance, assistive-technology usability, comprehension, comfort, or task completion.
 
-```ts
-import {
-  FocusTrap,
-  createRovingTabindex,
-  announceToScreenReader,
-} from '@accessibility-devkit/components';
+A release review should combine:
 
-// Trap focus in a modal
-const trap = new FocusTrap(document.getElementById('modal')!);
-trap.activate();
+1. Source inspection and deterministic checks.
+2. Browser automation, preserving incomplete results.
+3. Keyboard-only navigation and visible focus.
+4. Screen-reader review on supported browser and platform combinations.
+5. 200% zoom, narrow reflow, forced colors, and reduced motion.
+6. Switch Control for switch-critical paths.
+7. Human testing, including an individual CVI profile when CVI claims matter.
 
-// Arrow key navigation in a toolbar
-const { destroy } = createRovingTabindex(toolbar, '[role="button"]');
+Record completed checks, open verification, and only the claims the evidence supports.
 
-// Tell screen readers what happened
-announceToScreenReader('File saved');
-announceToScreenReader('Session expired. Please sign in again.', 'assertive');
-```
+## v1.0 to v1.1 migration
 
----
+v1.1 makes a clean pre-registry API break so names describe what the code can prove.
 
-### [@accessibility-devkit/accommodations](./packages/accommodations)
+| v1.0                         | v1.1                                                                          |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| `meetsWCAG`                  | `meetsContrastThreshold`                                                      |
+| `findAccessibleColor`        | `findNearestPassingColor`                                                     |
+| `simulateColorBlindness`     | `simulateColorVisionDeficiency`                                               |
+| `applyDyslexiaFriendlyFont`  | `applyTypographyPreference` with caller-supplied values                       |
+| `applyTextSpacing`           | `applyTextSpacingTest`, including paragraph spacing and restore               |
+| `meetsTextSpacing`           | Removed; author spacing values alone do not establish WCAG 1.4.12 conformance |
+| accommodation motion helpers | Use `@accessibility-devkit/motion`                                            |
+| `isUnsafeFlashRate`          | `exceedsFlashFrequencyLimit`; frequency is only one part of flash review      |
 
-Color perception, contrast math, and user preference detection.
+Invalid colors now throw instead of becoming black. Dwell and repeat intervals are explicit. English readability results identify their method. `createSessionTimeout` remains an implementation helper; use `assessTimeLimit` for policy boundaries.
 
-- **Color blindness simulation** transforms any hex color across seven color-vision deficiency types: protanopia, deuteranopia, tritanopia, protanomaly, deuteranomaly, tritanomaly, and achromatopsia
-- **Contrast ratio calculation** applies WCAG relative-luminance math and returns a value from 1 (no contrast) to 21 (black on white)
-- **WCAG threshold checking** returns pass or fail for AA or AAA on normal or large text (AA normal = 4.5:1, AA large = 3:1, AAA normal = 7:1, AAA large = 4.5:1)
-- **Automatic color adjustment** takes a failing foreground and background pair, then darkens or lightens the foreground until it reaches the requested level
-- **Preference detection** includes `prefersReducedMotion()`, `prefersHighContrast()`, `prefersDarkMode()`, and a live `watchPrefersReducedMotion()` subscription with cleanup
-
-```ts
-import {
-  meetsWCAG,
-  findAccessibleColor,
-  simulateColorBlindness,
-} from '@accessibility-devkit/accommodations';
-
-// Check before shipping
-if (!meetsWCAG('#aaaaaa', '#ffffff')) {
-  const fixed = findAccessibleColor('#aaaaaa', '#ffffff');
-}
-
-// See how a color looks with deuteranopia
-const simulated = simulateColorBlindness('#ff0000', 'deuteranopia');
-```
-
-The same package also covers dyslexia-friendly typography and WCAG 1.4.12 text spacing (`applyDyslexiaFriendlyFont`, `applyTextSpacing`, `meetsTextSpacing`).
-
----
-
-### [@accessibility-devkit/motor](./packages/motor)
-
-Motor and mobility support for people who use switches, eye-gaze, head pointers, or who have limited dexterity or tremor.
-
-- **Target size** checks against WCAG 2.5.8 (24px) and 2.5.5 (44px), plus a scanner for undersized controls
-- **Pointer cancellation** (2.5.2): fire on release, abort by sliding off the control
-- **Keyboard dragging alternative** (2.5.7): drive any drag with arrow keys
-- **Tremor tolerance**: drop accidental repeat activations, or activate on dwell instead of click
-
-```ts
-import { findUndersizedTargets, makeKeyboardDraggable } from '@accessibility-devkit/motor';
-
-findUndersizedTargets(document.body); // controls below the target-size threshold
-makeKeyboardDraggable(sliderThumb, { onMove: ({ dx }) => setValue((v) => v + dx) });
-```
-
----
-
-### [@accessibility-devkit/cognitive](./packages/cognitive)
-
-Reduce time pressure, memory load, and the cost of mistakes for people with cognitive, learning, or attention-related disabilities.
-
-- **Session timeouts** (2.2.1 / 2.2.6): warn before expiry and let people ask for more time
-- **Redundant-entry memory** (3.3.7): remember what was typed, never persist passwords
-- **Accessible authentication** (3.3.8): re-enable blocked paste, flag credential-field barriers
-- **Undo controller** (3.3.4 / 3.3.6): make consequential actions reversible
-
-```ts
-import { createSessionTimeout, allowPaste } from '@accessibility-devkit/cognitive';
-
-createSessionTimeout({ idleMs: 900_000, onWarn: showExtendDialog, onExpire: logout });
-allowPaste(document.querySelector('#one-time-code')!);
-```
-
----
-
-### [@accessibility-devkit/language](./packages/language)
-
-Reading level and literacy support for people with reading, language, and learning disabilities.
-
-- **Readability scoring**: Flesch Reading Ease, Flesch–Kincaid grade, and the Automated Readability Index
-- **Plain-language flags**: over-long sentences and multi-syllable words
-- **Abbreviation annotation** (3.1.4): wrap first use in `<abbr title>`
-
-```ts
-import { readingLevel, findLongSentences } from '@accessibility-devkit/language';
-
-readingLevel(paragraph).band; // 'easy' | 'moderate' | 'difficult'
-findLongSentences(paragraph, 20); // sentences to shorten
-```
-
----
-
-### [@accessibility-devkit/media](./packages/media)
-
-Auditory and media access for people who are Deaf or hard of hearing, and anyone disrupted by unexpected sound.
-
-- **Caption and audio-description checks** (1.2.2 / 1.2.5)
-- **Autoplay-audio detection and control** (1.4.2): find it, then inject a pause button
-- **Transcript association** through `aria-describedby`
-
-```ts
-import { auditMedia, ensureAudioControl, findAutoplayingAudio } from '@accessibility-devkit/media';
-
-auditMedia(document.body); // missing captions, autoplay audio, unreachable players
-findAutoplayingAudio().forEach(ensureAudioControl);
-```
-
----
-
-### [@accessibility-devkit/motion](./packages/motion)
-
-Seizure and vestibular safety for people with vestibular disorders and photosensitive conditions.
-
-- **Reduced-motion gating** (2.3.3): pick a calm alternative, sync classes to the preference
-- **Safe scrolling**: instant under reduced motion, smooth otherwise
-- **Flash metering** (2.3.1): self-check a strobing effect against the three-per-second threshold
-
-```ts
-import { withReducedMotion, createFlashMeter } from '@accessibility-devkit/motion';
-
-withReducedMotion(
-  () => slide(),
-  () => fade(),
-);
-const meter = createFlashMeter({ onUnsafe: () => stopAnimation() });
-```
-
----
-
-### Build packages from source
-
-The packages are source-only and not yet published to npm. Clone the repository and use its pnpm workspace to build and test them:
+## Develop from source
 
 ```bash
 git clone https://github.com/actually-useful-ai/accessibility-devkit.git
 cd accessibility-devkit
 pnpm install
 pnpm build
+pnpm lint
 pnpm test
+pnpm test:pack
 ```
 
-The workspace build produces CommonJS and ESM output with TypeScript declarations. The import examples above assume you are working from that cloned workspace.
-
----
-
-## Development
+Python has no runtime dependencies:
 
 ```bash
-pnpm install
-pnpm build       # Build all packages in parallel
-pnpm lint        # Lint
-pnpm test        # Run tests across all packages
-pnpm changeset   # Create a changeset for versioning
+PYTHONPATH=python/src python3 -m unittest discover -s python/tests -v
 ```
 
----
+Node CI covers versions 22 and 24. Python CI covers 3.11 through 3.14. Changesets keeps every npm package in one fixed version group; the PyPI distribution and GitHub release use the same version.
 
-## Related Projects
+Security guidance is in [`SECURITY.md`](SECURITY.md). Runtime dependency licenses and review notes are in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
-| Project                                                                   | What it does                                                                              |
-| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility) | Curated list of accessibility resources and tools                                         |
-| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)     | 53 datasets on disability demographics, web accessibility, and assistive technology usage |
+## License and credit
 
----
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md).
-
----
-
-## Author
-
-**Luke Steuber** · [lukesteuber.com](https://lukesteuber.com) · [@lukesteuber.com](https://bsky.app/profile/lukesteuber.com)
-
-## License
-
-MIT
+MIT © 2026 [Luke Steuber](https://github.com/lukeslp). Accessibility Devkit is maintained at [`actually-useful-ai/accessibility-devkit`](https://github.com/actually-useful-ai/accessibility-devkit).

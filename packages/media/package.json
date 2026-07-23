@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/media",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "Utilities for auditory and media accessibility: caption and transcript checks, audio-only detection, and autoplay-audio control.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -13,11 +13,13 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "build": "tsup src/index.ts --format cjs,esm --dts --sourcemap",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --sourcemap --watch",
     "test": "vitest run --environment jsdom"
   },
   "keywords": [
@@ -45,7 +47,8 @@
   },
   "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/media#readme",
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "devDependencies": {
     "@types/node": "^20.11.24"

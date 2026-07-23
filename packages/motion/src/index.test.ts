@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   applyMotionPreference,
   createFlashMeter,
-  isUnsafeFlashRate,
+  exceedsFlashFrequencyLimit,
   prefersReducedMotion,
   safeScrollIntoView,
   withReducedMotion,
@@ -95,8 +95,8 @@ describe('reduced-motion preference', () => {
 
 describe('flash safety', () => {
   it('applies the three-per-second threshold', () => {
-    expect(isUnsafeFlashRate(3)).toBe(false);
-    expect(isUnsafeFlashRate(4)).toBe(true);
+    expect(exceedsFlashFrequencyLimit(3)).toBe(false);
+    expect(exceedsFlashFrequencyLimit(4)).toBe(true);
   });
 
   it('fires onUnsafe when too many flashes fall inside the window', () => {

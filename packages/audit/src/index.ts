@@ -43,9 +43,9 @@ export interface AuditResult {
 // ============================================================
 
 const LEVEL_TAGS: Record<NonNullable<AuditOptions['level']>, string[]> = {
-  A: ['wcag2a'],
-  AA: ['wcag2a', 'wcag2aa'],
-  AAA: ['wcag2a', 'wcag2aa', 'wcag2aaa'],
+  A: ['wcag2a', 'wcag21a'],
+  AA: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
+  AAA: ['wcag2a', 'wcag2aa', 'wcag2aaa', 'wcag21a', 'wcag21aa', 'wcag22aa'],
 };
 
 function buildSummary(violations: axe.Result[]): AuditViolationSummary {
@@ -212,12 +212,7 @@ export function formatReport(
  * export default [eslintConfig];
  * ```
  */
-export const eslintConfig = {
-  plugins: { 'jsx-a11y': jsxA11y },
-  rules: Object.fromEntries(
-    Object.keys(jsxA11y.rules ?? {}).map((rule) => [`jsx-a11y/${rule}`, 'warn' as const]),
-  ),
-};
+export const eslintConfig = jsxA11y.flatConfigs.recommended;
 
 /** Re-export axe-core for direct use when needed. */
 export { axe };

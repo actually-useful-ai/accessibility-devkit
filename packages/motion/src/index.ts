@@ -6,6 +6,13 @@
  * disorders and photosensitive conditions.
  */
 
+import {
+  exceedsFlashFrequencyLimit,
+  GENERAL_FLASH_FREQUENCY_LIMIT_HZ,
+} from '@accessibility-devkit/core';
+
+export { exceedsFlashFrequencyLimit } from '@accessibility-devkit/core';
+
 // ============================================================
 // Reduced-motion Preference (WCAG 2.3.3 Animation from Interactions)
 // ============================================================
@@ -107,17 +114,7 @@ export function safeScrollIntoView(
 // ============================================================
 
 /** The WCAG general flash threshold: content must not flash more than this many times per second. */
-export const MAX_SAFE_FLASHES_PER_SECOND = 3;
-
-/**
- * Returns true if a flash rate exceeds the WCAG 2.3.1 general threshold of
- * three flashes per second.
- *
- * @param flashesPerSecond - Observed flash frequency in hertz
- */
-export function isUnsafeFlashRate(flashesPerSecond: number): boolean {
-  return flashesPerSecond > MAX_SAFE_FLASHES_PER_SECOND;
-}
+export const MAX_SAFE_FLASHES_PER_SECOND = GENERAL_FLASH_FREQUENCY_LIMIT_HZ;
 
 export interface FlashMeterOptions {
   /** Sliding window to count flashes over, in milliseconds (default 1000). */
@@ -167,7 +164,10 @@ export function createFlashMeter(options: FlashMeterOptions = {}): FlashMeter {
     record: (at = Date.now()): boolean => {
       timestamps.push(at);
       prune(at);
-      const over = timestamps.length > maxFlashes;
+      const over =
+        maxFlashes === MAX_SAFE_FLASHES_PER_SECOND && windowMs === 1000
+          ? exceedsFlashFrequencyLimit(timestamps.length)
+          : timestamps.length > maxFlashes;
       if (over) options.onUnsafe?.(timestamps.length);
       return over;
     },

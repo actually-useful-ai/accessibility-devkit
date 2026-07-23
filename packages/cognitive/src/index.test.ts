@@ -4,12 +4,25 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   allowPaste,
+  assessTimeLimit,
   auditAuthentication,
   createFieldMemory,
   createSessionTimeout,
   createUndoController,
   type KeyValueStore,
 } from './index';
+
+describe('time-limit policy', () => {
+  it('exposes deterministic WCAG assessment separately from the timer helper', () => {
+    expect(assessTimeLimit({ warningDurationMs: 20_000, extensionCount: 10 })).toMatchObject({
+      status: 'passes',
+      satisfiedBy: 'extensions',
+    });
+    expect(assessTimeLimit({ warningDurationMs: 19_999, extensionCount: 10 })).toMatchObject({
+      status: 'fails',
+    });
+  });
+});
 
 /** A deterministic in-memory store standing in for sessionStorage. */
 function memoryStore(): KeyValueStore {
