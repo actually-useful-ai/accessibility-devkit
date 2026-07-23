@@ -27,13 +27,13 @@ Start from the core review, then apply the priorities below.
 
 ## Packages to reach for
 
-| Need                                    | Package                                | Key utilities                                                                                                         |
-| --------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Timeouts, redundant entry, auth, undo   | `@accessibility-devkit/cognitive`      | `createSessionTimeout`, `createFieldMemory`, `allowPaste`, `auditAuthentication`, `createUndoController`              |
-| Forms, dialogs, menus, dense navigation | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`, `createSkipLink`, `announceToScreenReader` |
-| Plain-language content and errors       | `@accessibility-devkit/language`       | `readingLevel`, `findLongSentences`, `annotateAbbreviations`                                                          |
-| Conformance scanning and CI gates       | `@accessibility-devkit/audit`          | `runAudit`, `formatReport`, `eslintConfig`                                                                            |
-| Status color and data-viz contrast      | `@accessibility-devkit/accommodations` | `meetsWCAG`, `findAccessibleColor`, `simulateColorBlindness`                                                          |
+| Need                                    | Package                                | Key utilities                                                                                                               |
+| --------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| Timeouts, redundant entry, auth, undo   | `@accessibility-devkit/cognitive`      | `assessTimeLimit`, `createSessionTimeout`, `createFieldMemory`, `allowPaste`, `auditAuthentication`, `createUndoController` |
+| Forms, dialogs, menus, dense navigation | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`, `createSkipLink`, `announceToScreenReader`       |
+| Plain-language content and errors       | `@accessibility-devkit/language`       | `readingLevel`, `findLongSentences`, `annotateAbbreviations`                                                                |
+| Conformance scanning and CI gates       | `@accessibility-devkit/audit`          | `runAudit`, `formatReport`, `eslintConfig`                                                                                  |
+| Status color and data-viz contrast      | `@accessibility-devkit/accommodations` | `meetsContrastThreshold`, `findNearestPassingColor`, `simulateColorVisionDeficiency`                                        |
 
 ## Domain patterns
 

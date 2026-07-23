@@ -31,7 +31,7 @@ Start from the core review, then apply the priorities below. Test on real device
 | --------------------------------- | -------------------------------------- | ----------------------------------------------------------- |
 | Target size and spacing           | `@accessibility-devkit/motor`          | `meetsTargetSize`, `findUndersizedTargets`, `getTargetSize` |
 | Gesture and drag alternatives     | `@accessibility-devkit/motor`          | `makeKeyboardDraggable`, `makePointerCancellable`           |
-| Reflow, zoom, text spacing        | `@accessibility-devkit/accommodations` | `applyTextSpacing`, `meetsTextSpacing`, `meetsWCAG`         |
+| Reflow, zoom, text spacing        | `@accessibility-devkit/accommodations` | `applyTextSpacingTest`, `meetsContrastThreshold`            |
 | Device motion and reduced motion  | `@accessibility-devkit/motion`         | `withReducedMotion`, `applyMotionPreference`                |
 | Mobile auth (SSO, one-time codes) | `@accessibility-devkit/cognitive`      | `allowPaste`, `auditAuthentication`                         |
 | Sheets, drawers, and menus        | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`           |
