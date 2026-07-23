@@ -1,5 +1,6 @@
 {
   "name": "accessibility-devkit",
+  "description": "Accessibility review and implementation tools with evidence-based checks and manual verification.",
   "owner": {
     "name": "Luke Steuber"
   },

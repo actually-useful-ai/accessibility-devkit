@@ -91,6 +91,7 @@ test('keeps plugin, skill, and package identifiers valid for the quick start', a
   assert.equal(codex.name, 'accessibility');
   assert.equal(codex.skills, './skills/');
   assert.equal(claude.name, 'accessibility');
+  assert.match(marketplace.description, /accessibility/i);
   assert.equal(marketplace.plugins[0].name, 'accessibility');
   assert.match(skill, /^---\nname: accessibility\ndescription: /);
   assert.deepEqual(
