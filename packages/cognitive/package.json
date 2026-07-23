@@ -43,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/actually-useful-ai/accessibility-devkit/issues"
   },
-  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/main/packages/cognitive#readme",
+  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/cognitive#readme",
   "publishConfig": {
     "access": "public"
   },

@@ -120,7 +120,7 @@ test('keeps canonical repository metadata accurate', async () => {
     assert.equal(packageManifest.bugs.url, `${canonical}/issues`);
     assert.equal(
       packageManifest.homepage,
-      `${canonical}/tree/main/packages/${packageNames[index]}#readme`,
+      `${canonical}/tree/master/packages/${packageNames[index]}#readme`,
     );
   }
 });

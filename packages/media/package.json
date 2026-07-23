@@ -43,7 +43,7 @@
   "bugs": {
     "url": "https://github.com/actually-useful-ai/accessibility-devkit/issues"
   },
-  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/main/packages/media#readme",
+  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/media#readme",
   "publishConfig": {
     "access": "public"
   },
