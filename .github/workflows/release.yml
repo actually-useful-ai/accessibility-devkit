@@ -78,6 +78,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: npx --yes @accessibility-devkit/cli@1.1.0 contrast '#000000' '#ffffff'
-      - run: python -m pip install accessibility-devkit==1.1.0
+      - run: npx --yes @accessibility-devkit/cli@1.1.1 contrast '#000000' '#ffffff'
+      - run: python -m pip install accessibility-devkit==1.1.1
       - run: accessibility-devkit contrast '#000000' '#ffffff'

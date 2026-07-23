@@ -1,7 +1,7 @@
 """The versioned runtime-neutral report envelope."""
 
 SCHEMA_VERSION = "1.0.0"
-RUNTIME_VERSION = "1.1.0"
+RUNTIME_VERSION = "1.1.1"
 
 
 def item(rule_id, message, **overrides):

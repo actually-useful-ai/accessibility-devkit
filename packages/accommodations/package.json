@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/accommodations",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utilities for specific disability accommodations.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -48,7 +48,7 @@
     "provenance": true
   },
   "dependencies": {
-    "@accessibility-devkit/core": "workspace:*",
+    "@accessibility-devkit/core": "1.1.1",
     "@bjornlu/colorblind": "1.0.3"
   },
   "devDependencies": {

@@ -17,6 +17,7 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
   assert.equal(packed.status, 0, packed.stderr || packed.stdout);
   const result = JSON.parse(packed.stdout)[0];
   const files = new Set(result.files.map(({ path: file }) => file));
+  const manifest = JSON.parse(readFileSync(path.join(packagePath, 'package.json'), 'utf8'));
 
   for (const required of [
     'LICENSE',
@@ -30,7 +31,14 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
   ]) {
     assert.ok(files.has(required), `${result.name} tarball is missing ${required}`);
   }
-  assert.equal(result.version, '1.1.0', `${result.name} is not version 1.1.0`);
+  assert.equal(result.version, '1.1.1', `${result.name} is not version 1.1.1`);
+  for (const [dependency, range] of Object.entries(manifest.dependencies ?? {})) {
+    assert.equal(
+      range.startsWith('workspace:'),
+      false,
+      `${result.name} dependency ${dependency} uses a workspace-only range`,
+    );
+  }
   assert.equal(
     [...files].some((file) => file.startsWith('src/')),
     false,
@@ -39,7 +47,6 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
   if (result.name === '@accessibility-devkit/cli') {
     assert.ok(files.has('dist/cli.mjs'), 'CLI tarball is missing its executable');
     assert.ok(files.has('dist/cli.mjs.map'), 'CLI tarball is missing its executable source map');
-    const manifest = JSON.parse(readFileSync(path.join(packagePath, 'package.json'), 'utf8'));
     assert.equal(
       manifest.bin?.['accessibility-devkit'],
       'dist/cli.mjs',

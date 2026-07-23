@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/motor",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Utilities for motor and mobility accommodations: target size, pointer cancellation, drag and gesture alternatives, and tremor tolerance.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
