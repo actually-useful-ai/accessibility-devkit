@@ -31,7 +31,7 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
@@ -89,7 +89,7 @@ jobs:
     if: always() && needs.npm.result == 'success' && (needs.pypi.result == 'success' || needs.pypi.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - uses: actions/setup-python@v5
