@@ -1,6 +1,6 @@
 {
   "name": "@accessibility-devkit/cognitive",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Utilities for cognitive accessibility: session-timeout warnings, redundant-entry memory, accessible authentication, and undo controllers.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -51,7 +51,7 @@
     "provenance": true
   },
   "dependencies": {
-    "@accessibility-devkit/core": "1.1.1"
+    "@accessibility-devkit/core": "1.1.2"
   },
   "devDependencies": {
     "@types/node": "^20.11.24"

@@ -31,7 +31,7 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
   ]) {
     assert.ok(files.has(required), `${result.name} tarball is missing ${required}`);
   }
-  assert.equal(result.version, '1.1.1', `${result.name} is not version 1.1.1`);
+  assert.equal(result.version, '1.1.2', `${result.name} is not version 1.1.2`);
   for (const [dependency, range] of Object.entries(manifest.dependencies ?? {})) {
     assert.equal(
       range.startsWith('workspace:'),

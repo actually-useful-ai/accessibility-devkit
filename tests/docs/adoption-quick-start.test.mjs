@@ -165,7 +165,7 @@ test('publishes dual module metadata for every package when releases begin', asy
       },
     });
     assert.deepEqual(packageManifest.publishConfig, { access: 'public', provenance: true });
-    assert.equal(packageManifest.version, '1.1.1');
+    assert.equal(packageManifest.version, '1.1.2');
     assert.ok(packageManifest.files.includes('LICENSE'));
   }
 });

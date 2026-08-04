@@ -22,7 +22,7 @@ test('keeps public plugin manifests aligned with the package release', async () 
   const marketplacePlugin = marketplace.plugins[0];
   const manifests = [claude, codex, cursor, marketplacePlugin];
 
-  assert.equal(corePackage.version, '1.1.1');
+  assert.equal(corePackage.version, '1.1.2');
   for (const manifest of manifests) {
     assert.equal(manifest.name, 'accessibility');
     assert.equal(manifest.version, corePackage.version);
