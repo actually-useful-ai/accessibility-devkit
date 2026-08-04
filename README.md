@@ -91,6 +91,16 @@ The portable review source is [`skills/accessibility`](skills/accessibility). Co
 /plugin install accessibility@accessibility-devkit
 ```
 
+Cursor can register the same repository:
+
+```sh
+cursor-agent plugin marketplace add https://github.com/actually-useful-ai/accessibility-devkit
+cursor-agent
+```
+
+Open `/plugin` in the interactive agent and install Accessibility at user scope
+to make it available in the IDE and CLI.
+
 Start with:
 
 ```text
