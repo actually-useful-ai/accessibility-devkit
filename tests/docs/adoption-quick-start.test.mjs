@@ -176,6 +176,7 @@ test('keeps legacy repository ownership out of public readmes and manifests', as
     'package.json',
     '.codex-plugin/plugin.json',
     '.claude-plugin/plugin.json',
+    '.cursor-plugin/plugin.json',
     ...packageNames.flatMap((name) => [
       `packages/${name}/README.md`,
       `packages/${name}/package.json`,

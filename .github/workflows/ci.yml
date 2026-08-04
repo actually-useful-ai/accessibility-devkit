@@ -30,6 +30,7 @@ jobs:
       - run: pnpm format:check
       - run: pnpm spelling
       - run: pnpm test:docs
+      - run: pnpm test:manifests
       - run: pnpm test:packages
       - run: pnpm test:consumers
       - run: pnpm test:pack

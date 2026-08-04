@@ -1,13 +1,22 @@
 {
   "name": "accessibility",
+  "displayName": "Accessibility",
   "version": "1.1.1",
   "description": "Review and improve web accessibility with evidence-based checks and manual verification.",
   "author": {
-    "name": "Luke Steuber",
-    "url": "https://lukesteuber.com/"
+    "name": "Luke Steuber"
   },
   "homepage": "https://github.com/actually-useful-ai/accessibility-devkit#readme",
   "repository": "https://github.com/actually-useful-ai/accessibility-devkit",
   "license": "MIT",
-  "keywords": ["accessibility", "wcag-2.2", "aria", "keyboard", "screen-reader"]
+  "keywords": [
+    "accessibility",
+    "wcag-2.2",
+    "aria",
+    "keyboard",
+    "screen-reader",
+    "inclusive-design"
+  ],
+  "category": "developer-tools",
+  "skills": "./skills/"
 }
