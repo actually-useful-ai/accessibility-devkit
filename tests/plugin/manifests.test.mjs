@@ -12,11 +12,12 @@ async function readJson(relativePath) {
 }
 
 test('keeps public plugin manifests aligned with the package release', async () => {
-  const [claude, codex, cursor, marketplace, corePackage] = await Promise.all([
+  const [claude, codex, cursor, marketplace, cursorMarketplace, corePackage] = await Promise.all([
     readJson('.claude-plugin/plugin.json'),
     readJson('.codex-plugin/plugin.json'),
     readJson('.cursor-plugin/plugin.json'),
     readJson('.claude-plugin/marketplace.json'),
+    readJson('.cursor-plugin/marketplace.json'),
     readJson('packages/core/package.json'),
   ]);
   const marketplacePlugin = marketplace.plugins[0];
@@ -34,6 +35,10 @@ test('keeps public plugin manifests aligned with the package release', async () 
     assert.equal(manifest.repository, canonicalRepository);
   }
   assert.equal(marketplacePlugin.source, './');
+  assert.equal(cursorMarketplace.name, 'accessibility-devkit');
+  assert.equal(cursorMarketplace.metadata.version, '1.1.2');
+  assert.equal(cursorMarketplace.plugins[0].name, 'accessibility');
+  assert.equal(cursorMarketplace.plugins[0].source, '.');
 });
 
 test('declares Cursor skill discovery using the portable skill tree', async () => {

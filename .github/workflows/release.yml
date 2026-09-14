@@ -4,6 +4,12 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Existing release tag to recover
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -22,13 +28,18 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           registry-url: https://registry.npmjs.org
           cache: pnpm
-      - run: npm install --global npm@latest
+      # npm 12 changed OIDC publishing behavior after v1.1.1. Stay on the
+      # supported v11 line until the release path is verified against v12.
+      - run: npm install --global npm@11.19.0
+      - run: npm --version
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm changeset publish
@@ -37,6 +48,7 @@ jobs:
 
   pypi:
     name: Publish Python package
+    if: github.event_name == 'push'
     needs: verify
     runs-on: ubuntu-latest
     environment: release
@@ -58,21 +70,26 @@ jobs:
   release:
     name: Create GitHub release
     needs: [npm, pypi]
+    if: always() && needs.npm.result == 'success' && (needs.pypi.result == 'success' || needs.pypi.result == 'skipped')
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - run: gh release create "$GITHUB_REF_NAME" --verify-tag --generate-notes --title "Accessibility Devkit $GITHUB_REF_NAME"
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+      - run: gh release create "$RELEASE_TAG" --verify-tag --generate-notes --title "Accessibility Devkit $RELEASE_TAG"
         env:
           GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.ref || github.ref_name }}
 
   verify-installs:
     name: Verify registry installs
     needs: [npm, pypi]
+    if: always() && needs.npm.result == 'success' && (needs.pypi.result == 'success' || needs.pypi.result == 'skipped')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - uses: actions/setup-python@v7

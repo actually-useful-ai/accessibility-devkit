@@ -23,13 +23,17 @@ async function read(relativePath) {
   return readFile(path.join(root, relativePath), 'utf8');
 }
 
-test('leads with one-minute outcomes and keeps tool-specific shortcuts secondary', async () => {
+test('offers outcomes, installable checks, and the review workflow', async () => {
   const readme = await read('README.md');
 
-  assert.match(readme, /## Start in a minute/i);
-  assert.match(readme, /### Run a check/i);
-  assert.match(readme, /### Import a utility/i);
-  assert.match(readme, /### Add the review workflow/i);
+  assert.match(readme, /## Start with the outcome/i);
+  assert.match(readme, /## Install the published release/i);
+  assert.match(readme, /npx @accessibility-devkit\/cli@1\.1\.2 contrast/i);
+  assert.match(
+    readme,
+    /Changes on the default branch.*available from source until a later release/i,
+  );
+  assert.doesNotMatch(readme, /source-only|not yet published to npm/i);
   assert.match(readme, /Plugins Directory/i);
   assert.match(readme, /marketplace.*import|import.*marketplace/i);
   assert.match(readme, /\.claude-plugin\/marketplace\.json/);
@@ -40,7 +44,6 @@ test('leads with one-minute outcomes and keeps tool-specific shortcuts secondary
   assert.match(readme, /Review this interface for accessibility barriers/i);
   assert.match(readme, /Expected (result|output)/i);
   assert.match(readme, /Verif(y|ication)/i);
-  assert.doesNotMatch(readme.split('## Start in a minute')[0], /Codex|Claude|TypeScript/i);
 });
 
 test('offers a repository-backed direct skill fallback and separate Claude commands', async () => {
@@ -143,7 +146,7 @@ test('documents installable npm and Python routes without hiding source developm
 
   const readme = await read('README.md');
   assert.match(readme, /npm install @accessibility-devkit\/core/i);
-  assert.match(readme, /pipx run accessibility-devkit/i);
+  assert.match(readme, /pipx run --spec accessibility-devkit==1\.1\.2 accessibility-devkit/i);
   assert.match(readme, /from accessibility_devkit import/i);
   assert.match(readme, /require\('@accessibility-devkit\/core'\)/i);
   assert.match(readme, /## v1\.0 to v1\.1 migration/i);

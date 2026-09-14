@@ -48,7 +48,7 @@
     "provenance": true
   },
   "dependencies": {
-    "axe-core": "^4.12.1",
+    "axe-core": "^4.13.0",
     "eslint-plugin-jsx-a11y": "^6.10.2"
   },
   "devDependencies": {
