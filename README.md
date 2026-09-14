@@ -8,10 +8,11 @@ Accessibility Devkit helps a team turn accessibility concerns into work people c
 
 The review plugin looks for barriers in an interface and explains each finding in practical terms: what someone is trying to do, what gets in the way, who it affects, the smallest useful repair, and how the team should verify the result. Advocates can use that evidence to describe the impact on people. Engineering managers can use it to set priorities, assign work, and define what “done” means. Engineers can use the TypeScript packages to fix common problems in code.
 
-The project has two parts:
+The project has three parts:
 
 - **A review plugin for Codex and Claude Code.** It inspects an interface, helps plan or make focused repairs, and keeps automated findings separate from checks that still need a keyboard, screen reader, zoom test, or human judgment.
-- **Eight source-only TypeScript packages.** They cover auditing, focus and keyboard behavior, color and text, motor access, cognitive access, language, media, and motion.
+- **Ten npm packages.** They include a portable core and CLI, plus auditing, focus and keyboard behavior, color and text, motor access, cognitive access, language, media, and motion.
+- **A Python core and CLI.** It shares the command-line report contract with the Node CLI.
 
 No overlay. No claim that a scan proves conformance. The work stays in the design, content, and source code where a team can test and maintain it.
 
@@ -35,12 +36,12 @@ This gives advocates and engineering teams a shared record. It also makes uncert
 
 ## Choose the part you need
 
-| Your situation | Start here |
-| --- | --- |
-| You need to understand the barriers in an interface | Install the review plugin and begin with the prompt above |
-| You have findings but need help turning them into engineering work | Ask the plugin to group findings by affected task, owner, risk, and verification step |
-| You already know the code-level problem | Use the package map below to find a focused utility |
-| You need a compliance decision or evidence of real-world access | Use the review to prepare testing, then verify with assistive technology and people who use the relevant access methods |
+| Your situation                                                     | Start here                                                                                                              |
+| ------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| You need to understand the barriers in an interface                | Install the review plugin and begin with the prompt above                                                               |
+| You have findings but need help turning them into engineering work | Ask the plugin to group findings by affected task, owner, risk, and verification step                                   |
+| You already know the code-level problem                            | Use the package map below to find a focused utility                                                                     |
+| You need a compliance decision or evidence of real-world access    | Use the review to prepare testing, then verify with assistive technology and people who use the relevant access methods |
 
 ## What the review can establish
 
@@ -48,9 +49,47 @@ The plugin can inspect source, identify likely barriers, explain their impact, m
 
 Some conclusions still require people and tools outside the repository. Keyboard use, screen-reader output, zoom and reflow, visual states, captions, error recovery, and complete task flows all need suitable testing. A review should label each check as completed, planned, or unverified. It should never turn an automated scan into a compliance claim.
 
+## Install the published release
+
+Version 1.1.2 is available for all ten npm packages and the Python package. The examples below select that published release. Changes on the default branch, including dependency updates, are available from source until a later release is published.
+
+Use Node 22+ or Python 3.11+ to run a check:
+
+```bash
+npx @accessibility-devkit/cli@1.1.2 contrast '#595959' '#ffffff'
+pipx run --spec accessibility-devkit==1.1.2 accessibility-devkit contrast '#595959' '#ffffff'
+```
+
+Import a portable utility:
+
+```bash
+npm install @accessibility-devkit/core@1.1.2
+python -m pip install accessibility-devkit==1.1.2
+```
+
+```js
+import { getContrastRatio } from '@accessibility-devkit/core';
+
+getContrastRatio('#595959', '#ffffff');
+```
+
+CommonJS is also supported:
+
+```js
+const { getContrastRatio } = require('@accessibility-devkit/core');
+```
+
+```python
+from accessibility_devkit import get_contrast_ratio
+
+get_contrast_ratio("#595959", "#ffffff")
+```
+
+A passing automated check still needs the manual verification described above.
+
 ## Five-minute quick start
 
-The plugin is the quickest way to bring the review workflow into a project. The TypeScript packages are optional and currently available from this source workspace only.
+The plugin is the quickest way to bring the review workflow into a project. The npm and Python packages are optional; install the published release above or build the current source below.
 
 ### Codex desktop app
 
@@ -108,29 +147,29 @@ Run these marketplace commands in Claude Code, then use the same first prompt:
 
 The general `accessibility` skill starts with the task, evidence, repair, and verification. It can route a review to a specialist when the product has a clear shape.
 
-| Product | Specialist | What it checks first |
-| --- | --- | --- |
-| Games and real-time interactive experiences | `accessibility-gaming` | Flash safety, input remapping, captions for audio cues, assist modes, and difficulty settings |
-| Enterprise software, SaaS, and internal tools | `accessibility-business` | Forms, timeouts, authentication, error recovery, and conformance evidence |
-| Visual design and design systems | `accessibility-design` | Color and contrast, typography, motion budgets, and accessible component specifications |
-| Mobile and touch-first web apps | `accessibility-mobile` | Target size, alternatives to gestures, orientation and reflow, zoom, and mobile screen readers |
+| Product                                       | Specialist               | What it checks first                                                                           |
+| --------------------------------------------- | ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Games and real-time interactive experiences   | `accessibility-gaming`   | Flash safety, input remapping, captions for audio cues, assist modes, and difficulty settings  |
+| Enterprise software, SaaS, and internal tools | `accessibility-business` | Forms, timeouts, authentication, error recovery, and conformance evidence                      |
+| Visual design and design systems              | `accessibility-design`   | Color and contrast, typography, motion budgets, and accessible component specifications        |
+| Mobile and touch-first web apps               | `accessibility-mobile`   | Target size, alternatives to gestures, orientation and reflow, zoom, and mobile screen readers |
 
 Ask for a specialist by name or let the general skill route the review. Design work can also use the separate [`intentional-ux`](https://github.com/actually-useful-ai/intentional-ux) skill to examine goals, decisions, and interaction cost.
 
 ## TypeScript package map
 
-The packages are source-only and not yet published to npm. Each package handles a specific class of code-level barrier.
+The published packages include a [portable core](./packages/core) and [CLI](./packages/cli), plus the eight browser-focused packages below. The [Python package](./python) provides the same portable checks and command-line report contract.
 
-| Barrier | Package | Examples |
-| --- | --- | --- |
-| Automated checks and pipeline reporting | [`audit`](./packages/audit) | axe-core audits, report formatting, ESLint configuration |
-| Focus, keyboard behavior, dialogs, menus, and status messages | [`components`](./packages/components) | focus traps, roving tabindex, skip links, live regions |
-| Contrast, color perception, text spacing, and system preferences | [`accommodations`](./packages/accommodations) | contrast checks, color adjustment, reduced-motion detection |
-| Small targets, drag-only controls, and repeated accidental input | [`motor`](./packages/motor) | target-size checks, pointer cancellation, keyboard dragging, tremor tolerance |
-| Time pressure, repeated entry, blocked paste, and irreversible actions | [`cognitive`](./packages/cognitive) | timeout warnings, field memory, authentication checks, undo |
-| Hard-to-read text and unexplained abbreviations | [`language`](./packages/language) | readability scores, long-sentence flags, abbreviation annotation |
-| Missing captions, transcripts, and controls for sound | [`media`](./packages/media) | media audits, autoplay detection, pause controls, transcript links |
-| Flashing and motion that can cause seizures or vestibular symptoms | [`motion`](./packages/motion) | reduced-motion handling, safe scrolling, flash-rate checks |
+| Barrier                                                                | Package                                       | Examples                                                                      |
+| ---------------------------------------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------- |
+| Automated checks and pipeline reporting                                | [`audit`](./packages/audit)                   | axe-core audits, report formatting, ESLint configuration                      |
+| Focus, keyboard behavior, dialogs, menus, and status messages          | [`components`](./packages/components)         | focus traps, roving tabindex, skip links, live regions                        |
+| Contrast, color perception, text spacing, and system preferences       | [`accommodations`](./packages/accommodations) | contrast checks, color adjustment, reduced-motion detection                   |
+| Small targets, drag-only controls, and repeated accidental input       | [`motor`](./packages/motor)                   | target-size checks, pointer cancellation, keyboard dragging, tremor tolerance |
+| Time pressure, repeated entry, blocked paste, and irreversible actions | [`cognitive`](./packages/cognitive)           | timeout warnings, field memory, authentication checks, undo                   |
+| Hard-to-read text and unexplained abbreviations                        | [`language`](./packages/language)             | readability scores, long-sentence flags, abbreviation annotation              |
+| Missing captions, transcripts, and controls for sound                  | [`media`](./packages/media)                   | media audits, autoplay detection, pause controls, transcript links            |
+| Flashing and motion that can cause seizures or vestibular symptoms     | [`motion`](./packages/motion)                 | reduced-motion handling, safe scrolling, flash-rate checks                    |
 
 Each package README documents its functions and shows code examples. The packages help implement repairs; they do not replace the review or the manual verification that follows it.
 
@@ -146,19 +185,40 @@ pnpm build
 pnpm test
 ```
 
-The build produces CommonJS, ECMAScript module, and TypeScript declaration files. Import examples in the package documentation assume that you are working from this cloned workspace.
+The build produces CommonJS, ECMAScript module, and TypeScript declaration files. Use source builds for changes that have not yet been released; package imports also work with the published packages.
+
+## Report contract
+
+The shared [report schema](./spec/report.schema.json) uses JSON Schema 2020-12. Reports keep automated findings separate from manual checks; [golden fixtures](./spec/fixtures) verify Node and Python parity.
+
+## v1.0 to v1.1 migration
+
+v1.1 makes a clean pre-registry API break so names describe what the code can prove.
+
+| v1.0                         | v1.1                                                                          |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| `meetsWCAG`                  | `meetsContrastThreshold`                                                      |
+| `findAccessibleColor`        | `findNearestPassingColor`                                                     |
+| `simulateColorBlindness`     | `simulateColorVisionDeficiency`                                               |
+| `applyDyslexiaFriendlyFont`  | `applyTypographyPreference` with caller-supplied values                       |
+| `applyTextSpacing`           | `applyTextSpacingTest`, including paragraph spacing and restore               |
+| `meetsTextSpacing`           | Removed; author spacing values alone do not establish WCAG 1.4.12 conformance |
+| accommodation motion helpers | Use `@accessibility-devkit/motion`                                            |
+| `isUnsafeFlashRate`          | `exceedsFlashFrequencyLimit`; frequency is only one part of flash review      |
+
+Invalid colors now throw instead of becoming black. Dwell and repeat intervals are explicit. English readability results identify their method. `createSessionTimeout` remains an implementation helper; use `assessTimeLimit` for policy boundaries.
 
 ## Repository map
 
-| Path | Contents |
-| --- | --- |
-| [`skills/accessibility`](./skills/accessibility) | General review workflow and verification guidance |
-| [`skills/accessibility-*`](./skills) | Four specialist review lenses |
-| [`packages`](./packages) | Eight TypeScript packages and their API documentation |
+| Path                                                                                   | Contents                                                             |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [`skills/accessibility`](./skills/accessibility)                                       | General review workflow and verification guidance                    |
+| [`skills/accessibility-*`](./skills)                                                   | Four specialist review lenses                                        |
+| [`packages`](./packages)                                                               | Ten npm packages and their API documentation                         |
 | [`examples/accessible-component-review.md`](./examples/accessible-component-review.md) | One component followed from evidence through repair and verification |
-| [`docs/01-philosophy.md`](./docs/01-philosophy.md) | Project principles |
-| [`docs/02-why-not-overlays.md`](./docs/02-why-not-overlays.md) | Why source-level repairs matter |
-| [`docs/03-layered-approach.md`](./docs/03-layered-approach.md) | How reviews, code, and testing fit together |
+| [`docs/01-philosophy.md`](./docs/01-philosophy.md)                                     | Project principles                                                   |
+| [`docs/02-why-not-overlays.md`](./docs/02-why-not-overlays.md)                         | Why source-level repairs matter                                      |
+| [`docs/03-layered-approach.md`](./docs/03-layered-approach.md)                         | How reviews, code, and testing fit together                          |
 
 ## Development
 
@@ -172,10 +232,10 @@ pnpm changeset   # describe a change for versioning
 
 ## Related projects
 
-| Project | What it does |
-| --- | --- |
-| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility) | Curated accessibility resources and tools |
-| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas) | Disability demographics, web accessibility, and assistive-technology datasets |
+| Project                                                                   | What it does                                                                  |
+| ------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [awesome-accessibility](https://github.com/lukeslp/awesome-accessibility) | Curated accessibility resources and tools                                     |
+| [accessibility-atlas](https://github.com/lukeslp/accessibility-atlas)     | Disability demographics, web accessibility, and assistive-technology datasets |
 
 ## Contributing
 
