@@ -1,0 +1,19 @@
+{
+  "name": "accessibility-devkit",
+  "displayName": "Accessibility Devkit",
+  "owner": {
+    "name": "Luke Steuber"
+  },
+  "metadata": {
+    "description": "Practical accessibility review guidance for product and engineering work.",
+    "version": "1.1.2"
+  },
+  "plugins": [
+    {
+      "name": "accessibility",
+      "source": ".",
+      "description": "Review products across accessibility, mobile, design, business, and gaming contexts.",
+      "version": "1.1.2"
+    }
+  ]
+}
