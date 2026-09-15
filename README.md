@@ -143,6 +143,25 @@ Run these marketplace commands in Claude Code, then use the same first prompt:
 /plugin install accessibility@accessibility-devkit
 ```
 
+## Optional drafting and agent tools
+
+Two additional packages are available from this repository's source. They are separate
+from the ten published 1.1.2 packages and are not included in the installed 1.1.2 plugin:
+
+- [`assist`](./packages/assist): contextual alt-text drafts, accessibility review suggestions,
+  and selectable word suggestions through an explicitly chosen provider and model. It
+  includes a CLI. Generated text is always a draft for human review.
+- [`mcp`](./packages/mcp): a local stdio MCP server exposing source scanning, contrast,
+  readability, and timing checks to compatible agents. It uses the existing deterministic
+  functions and does not read local files, fetch URLs, or contact model providers.
+
+These packages recover useful capabilities from the archived
+[`accessibility-devkit-llm`](https://github.com/lukeslp/accessibility-devkit-llm) prototype.
+See the [migration map](./docs/04-prototype-migration.md) for each old API's disposition
+and the package READMEs for source build and usage instructions. The separate
+[`intentional-ux`](https://github.com/actually-useful-ai/intentional-ux) plugin remains
+the companion for goals, decisions, navigation, and interaction cost.
+
 ## Review lenses for different products
 
 The general `accessibility` skill starts with the task, evidence, repair, and verification. It can route a review to a specialist when the product has a clear shape.

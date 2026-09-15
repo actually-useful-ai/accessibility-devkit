@@ -45,6 +45,8 @@
     "tsup",
     "TypeScript",
     "unminified",
-    "WCAG"
+    "WCAG",
+    "Ollama",
+    "huggingface"
   ]
 }

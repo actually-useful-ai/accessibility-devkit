@@ -31,7 +31,11 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
   ]) {
     assert.ok(files.has(required), `${result.name} tarball is missing ${required}`);
   }
-  assert.equal(result.version, '1.1.2', `${result.name} is not version 1.1.2`);
+  assert.equal(
+    result.version,
+    manifest.version,
+    `${result.name} tarball version differs from its manifest`,
+  );
   for (const [dependency, range] of Object.entries(manifest.dependencies ?? {})) {
     assert.equal(
       range.startsWith('workspace:'),
@@ -44,12 +48,12 @@ for (const directory of readdirSync(packagesDirectory, { withFileTypes: true }))
     false,
     `${result.name} unexpectedly includes source files`,
   );
-  if (result.name === '@accessibility-devkit/cli') {
+  if (manifest.bin) {
     assert.ok(files.has('dist/cli.mjs'), 'CLI tarball is missing its executable');
     assert.ok(files.has('dist/cli.mjs.map'), 'CLI tarball is missing its executable source map');
     assert.equal(
-      manifest.bin?.['accessibility-devkit'],
-      'dist/cli.mjs',
+      Object.values(manifest.bin).every((entry) => entry === 'dist/cli.mjs'),
+      true,
       'CLI bin path must already use npm’s normalized form',
     );
   }
