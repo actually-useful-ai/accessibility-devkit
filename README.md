@@ -1,10 +1,8 @@
 # Accessibility Devkit
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
-[![WCAG 2.2 AA](https://img.shields.io/badge/WCAG-2.2_AA-blue.svg)](https://www.w3.org/TR/WCAG22/)
-
 Accessibility Devkit helps a team turn accessibility concerns into work people can act on.
+
+[![Installation guide](https://img.shields.io/badge/Install-Get_started-2563eb?style=flat-square)](#install-the-published-release) [![MIT code license](https://img.shields.io/badge/Code-MIT-181717?style=flat-square)](LICENSE) [![Actually Useful AI collection](https://img.shields.io/badge/Actually_Useful_AI-Collection-181717?style=flat-square)](https://github.com/actually-useful-ai)
 
 The review plugin looks for barriers in an interface and explains each finding in practical terms: what someone is trying to do, what gets in the way, who it affects, the smallest useful repair, and how the team should verify the result. Advocates can use that evidence to describe the impact on people. Engineering managers can use it to set priorities, assign work, and define what “done” means. Engineers can use the TypeScript packages to fix common problems in code.
 
@@ -266,4 +264,11 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
-MIT
+[MIT](LICENSE).
+
+## Around here
+
+[Luke Steuber](https://github.com/lukeslp) · [Data Poems](https://github.com/data-poems) · [Ambient Time](https://github.com/ambient-time) · [Actually Useful AI](https://github.com/actually-useful-ai) · [One Impossible Thing](https://github.com/one-impossible-thing)
+
+Made by [Luke Steuber](https://lukesteuber.com). Questions or collaboration:
+[luke@lukesteuber.com](mailto:luke@lukesteuber.com).
