@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/actually-useful-ai/accessibility-devkit#readme",
   "scripts": {
-    "build": "pnpm --filter @accessibility-devkit/core build && pnpm --filter=\"./packages/*\" --filter=\"!@accessibility-devkit/core\" --parallel build",
+    "build": "pnpm --filter @accessibility-devkit/core build && pnpm --filter @accessibility-devkit/cli build && pnpm --filter=\"./packages/*\" --filter=\"!@accessibility-devkit/core\" --filter=\"!@accessibility-devkit/cli\" --parallel build",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

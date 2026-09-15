@@ -1,0 +1,65 @@
+{
+  "name": "@accessibility-devkit/mcp",
+  "version": "0.1.0",
+  "description": "Stdio MCP tools for deterministic accessibility checks.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "accessibility-mcp": "dist/cli.mjs"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run"
+  },
+  "keywords": [
+    "accessibility",
+    "a11y",
+    "cli",
+    "scanner",
+    "wcag"
+  ],
+  "author": {
+    "name": "Luke Steuber",
+    "email": "luke@lukesteuber.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/actually-useful-ai/accessibility-devkit.git",
+    "directory": "packages/mcp"
+  },
+  "bugs": {
+    "url": "https://github.com/actually-useful-ai/accessibility-devkit/issues"
+  },
+  "homepage": "https://github.com/actually-useful-ai/accessibility-devkit/tree/master/packages/mcp#readme",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@accessibility-devkit/core": "1.1.2",
+    "@accessibility-devkit/cli": "1.1.2",
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0"
+  }
+}

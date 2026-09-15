@@ -187,7 +187,12 @@ test('keeps legacy repository ownership out of public readmes and manifests', as
   ];
 
   for (const relativePath of publicFiles) {
-    assert.doesNotMatch(await read(relativePath), /lukeslp\/accessibility-devkit/i, relativePath);
+    // The separately named accessibility-devkit-llm archive is legitimate provenance.
+    assert.doesNotMatch(
+      await read(relativePath),
+      /lukeslp\/accessibility-devkit(?![-\w])/i,
+      relativePath,
+    );
   }
 });
 
