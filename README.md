@@ -227,15 +227,22 @@ Invalid colors now throw instead of becoming black. Dwell and repeat intervals a
 
 ## Repository map
 
-| Path                                                                                   | Contents                                                             |
-| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| [`skills/accessibility`](./skills/accessibility)                                       | General review workflow and verification guidance                    |
-| [`skills/accessibility-*`](./skills)                                                   | Four specialist review lenses                                        |
-| [`packages`](./packages)                                                               | Ten npm packages and their API documentation                         |
-| [`examples/accessible-component-review.md`](./examples/accessible-component-review.md) | One component followed from evidence through repair and verification |
-| [`docs/01-philosophy.md`](./docs/01-philosophy.md)                                     | Project principles                                                   |
-| [`docs/02-why-not-overlays.md`](./docs/02-why-not-overlays.md)                         | Why source-level repairs matter                                      |
-| [`docs/03-layered-approach.md`](./docs/03-layered-approach.md)                         | How reviews, code, and testing fit together                          |
+| Path                                                                                   | Contents                                                                                |
+| -------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| [`skills/accessibility`](./skills/accessibility)                                       | General review workflow and verification guidance                                       |
+| [`skills/accessibility-*`](./skills)                                                   | Four specialist review lenses                                                           |
+| [`packages`](./packages)                                                               | Ten npm packages and their API documentation                                            |
+| [`examples/accessible-component-review.md`](./examples/accessible-component-review.md) | One component followed from evidence through repair and verification                    |
+| [`examples/keyboard-guard.md`](./examples/keyboard-guard.md)                           | Runnable character shortcuts that respect typing, focus ownership and disabled controls |
+| [`docs/01-philosophy.md`](./docs/01-philosophy.md)                                     | Project principles                                                                      |
+| [`docs/02-why-not-overlays.md`](./docs/02-why-not-overlays.md)                         | Why source-level repairs matter                                                         |
+| [`docs/03-layered-approach.md`](./docs/03-layered-approach.md)                         | How reviews, code, and testing fit together                                             |
+
+The [keyboard shortcut example](./examples/keyboard-guard.md) runs from a local
+web server without a build. Its helper requires explicit shortcut enablement
+and application focus ownership, and leaves native buttons as the primary
+controls. It is a source example, separate from the published 1.1.2 packages;
+its guide describes browser checks and the manual verification still needed.
 
 ## Development
 
