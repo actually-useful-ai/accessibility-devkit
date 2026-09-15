@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Keyboard shortcuts that respect typing</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font:
+          18px/1.55 system-ui,
+          sans-serif;
+        color: #18342f;
+        background: #f4f6f2;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        max-width: 48rem;
+        padding: 2rem 1.25rem 4rem;
+        margin: auto;
+      }
+      h1 {
+        font-size: clamp(1.8rem, 5vw, 2.8rem);
+        line-height: 1.15;
+      }
+      h2 {
+        font-size: 1.3rem;
+      }
+      section {
+        border-top: 1px solid #8a9c96;
+        padding-top: 1rem;
+        margin-top: 1.5rem;
+      }
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+      button {
+        min-height: 44px;
+        padding: 0.6rem 1rem;
+        color: #fff;
+        background: #205d4e;
+        border: 2px solid #205d4e;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+      button:disabled {
+        color: #45514b;
+        background: #e1e7e1;
+        border-color: #8a9c96;
+        cursor: default;
+      }
+      :focus-visible {
+        outline: 3px solid #8b3b00;
+        outline-offset: 4px;
+      }
+      label {
+        display: block;
+        margin: 0.75rem 0;
+      }
+      .toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        min-height: 44px;
+      }
+      input[type='checkbox'] {
+        width: 24px;
+        height: 24px;
+      }
+      input[type='text'],
+      [contenteditable] {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0.65rem;
+        border: 1px solid #687d73;
+        border-radius: 0.3rem;
+        background: #fff;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+      }
+      #status {
+        min-height: 1.6em;
+        font-weight: 600;
+      }
+      dialog {
+        max-width: 28rem;
+        width: calc(100% - 4rem);
+        border: 2px solid #205d4e;
+        border-radius: 0.5rem;
+        color: inherit;
+        padding: 1.5rem;
+      }
+      dialog::backdrop {
+        background: #10231dcc;
+      }
+      code {
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p>Accessibility Devkit · Browser example</p>
+      <h1>Shortcuts without interrupting typing</h1>
+      <p>
+        Turn on number shortcuts, then try typing in the fields below. The buttons always work, even
+        when shortcuts are off.
+      </p>
+      <label class="toggle"><input id="enabled" type="checkbox" /> Enable number shortcuts</label>
+      <section aria-labelledby="action-heading">
+        <h2 id="action-heading">Choose an action</h2>
+        <p id="keys">When enabled: 1 selects a route; 2 saves it. Shortcut 3 is unavailable.</p>
+        <div class="actions" aria-describedby="keys">
+          <button id="route" data-key="1">Select route</button>
+          <button id="save" data-key="2">Save route</button>
+          <button id="unavailable" data-key="3" disabled>Unavailable action</button>
+        </div>
+        <p id="status" role="status" aria-live="polite">No action yet.</p>
+      </section>
+      <section aria-labelledby="typing-heading">
+        <h2 id="typing-heading">Try typing numbers</h2>
+        <label for="notes">Notes</label><input id="notes" type="text" placeholder="Type 123 here" />
+        <p id="editor-label">Editable text</p>
+        <div
+          id="editor"
+          contenteditable="true"
+          role="textbox"
+          aria-labelledby="editor-label"
+          aria-multiline="true"
+        >
+          <span>Type here too.</span>
+        </div>
+      </section>
+      <section aria-labelledby="dialog-heading">
+        <h2 id="dialog-heading">Give a dialog control of the keyboard</h2>
+        <p>Background shortcuts pause while the dialog is open.</p>
+        <button id="open-dialog">Open dialog</button>
+      </section>
+      <p><a href="../keyboard-guard.md">Integration guide</a></p>
+    </main>
+    <dialog id="dialog" aria-labelledby="dialog-title">
+      <h2 id="dialog-title">Shortcuts paused</h2>
+      <p>Pressing 1 or 2 here will not select or save a route behind this dialog.</p>
+      <form method="dialog"><button autofocus>Close dialog</button></form>
+    </dialog>
+    <script type="module">
+      import { shouldHandleShortcut, canActivateShortcutButton } from './guard.mjs';
+      const enabled = document.querySelector('#enabled');
+      const dialog = document.querySelector('#dialog');
+      const status = document.querySelector('#status');
+      const buttons = [...document.querySelectorAll('[data-key]')];
+      let count = 0;
+      enabled.addEventListener('change', () => {
+        for (const button of buttons) {
+          if (enabled.checked && !button.disabled)
+            button.setAttribute('aria-keyshortcuts', button.dataset.key);
+          else button.removeAttribute('aria-keyshortcuts');
+        }
+      });
+      for (const button of buttons) {
+        button.addEventListener('click', () => {
+          status.textContent = `${button.textContent}. Action ${++count}.`;
+        });
+      }
+      const trigger = document.querySelector('#open-dialog');
+      trigger.addEventListener('click', () => dialog.showModal());
+      dialog.addEventListener('close', () => trigger.focus());
+      document.addEventListener('keydown', (event) => {
+        if (!shouldHandleShortcut(event, { enabled: enabled.checked, ownsFocus: !dialog.open }))
+          return;
+        const button = buttons.find((candidate) => candidate.dataset.key === event.key);
+        if (!canActivateShortcutButton(button)) return;
+        event.preventDefault();
+        button.click();
+      });
+    </script>
+  </body>
+</html>
