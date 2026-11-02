@@ -19,10 +19,11 @@ Start from the core review, then apply the priorities below. Much of design's ac
 ## Review lens
 
 - **Contrast is a constraint, not a preference.** Text and meaningful UI meet WCAG contrast (4.5:1 normal, 3:1 large / non-text). Verify tokens, not just one screen.
-- **Never color alone.** Every state color carries a redundant cue — shape, icon, text, or pattern.
+- **Never color alone.** Every state color carries a redundant cue — shape, icon, text, or pattern. Red versus green is the pairing most often lost, so never let it carry meaning by itself.
+- **Simulate before choosing.** Run each palette through `simulateColorVisionDeficiency` for deuteranopia, protanopia, tritanopia, and `achromatopsia` (grayscale) while choosing it, and keep states distinct by lightness as well as hue.
 - **Type that flexes.** The type scale survives the WCAG 1.4.12 text-spacing overrides and 200% zoom without clipping, and a dyslexia-friendly path exists.
 - **A motion budget.** Every animation has a reduced-motion variant, and nothing large moves for people who ask for less.
-- **Specs carry the details.** Each component spec states its focus indicator, minimum target size, keyboard behaviour, and non-color cues, so implementation cannot silently drop them.
+- **Specs carry the details.** Each component spec states its focus indicator, minimum target size, keyboard behavior, and non-color cues, so implementation cannot silently drop them.
 
 ## Packages to reach for
 
@@ -32,7 +33,7 @@ Start from the core review, then apply the priorities below. Much of design's ac
 | Typography and text spacing      | `@accessibility-devkit/accommodations` | `applyTypographyPreference`, `applyTextSpacingTest`                                                      |
 | Motion budget and reduced motion | `@accessibility-devkit/motion`         | `withReducedMotion`, `applyMotionPreference`, `safeScrollIntoView`                                       |
 | Target size in specs             | `@accessibility-devkit/motor`          | `meetsTargetSize`, `getTargetSize`, `findUndersizedTargets`                                              |
-| Behavioural component primitives | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`                                |
+| Behavioral component primitives  | `@accessibility-devkit/components`     | `FocusTrap`, `AccessibleDialog`, `AccessibleMenu`, `createRovingTabindex`                                |
 | Reading level of content design  | `@accessibility-devkit/language`       | `readingLevel`, `findLongSentences`                                                                      |
 
 ## Domain patterns
@@ -41,7 +42,7 @@ Start from the core review, then apply the priorities below. Much of design's ac
 - A type scale validated against the text-spacing overrides, with caller-selected typography preferences documented.
 - A motion budget in the system: allowed durations and effects, each with a reduced-motion fallback.
 - A visible, consistent focus indicator defined as a token and shown in every component state.
-- Component specs that name focus, target size, keyboard behaviour, and non-color cues as first-class fields.
+- Component specs that name focus, target size, keyboard behavior, and non-color cues as first-class fields.
 
 ## Guardrails
 

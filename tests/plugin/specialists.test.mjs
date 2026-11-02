@@ -44,3 +44,21 @@ test('the core accessibility skill routes to each specialist', async () => {
     assert.match(skill, new RegExp(`\`${name}\``), `core skill links ${name}`);
   }
 });
+
+test('every skill treats color vision as a design factor', async () => {
+  for (const name of ['accessibility', ...SPECIALISTS]) {
+    const skill = await read(`skills/${name}/SKILL.md`);
+
+    assert.match(skill, /deuteranopia/i, `${name} names deuteranopia`);
+    assert.match(skill, /simulateColorVisionDeficiency/, `${name} names the simulator`);
+    assert.match(skill, /red versus green|red and green/i, `${name} warns about red versus green`);
+  }
+});
+
+test('skills use American spelling', async () => {
+  for (const name of ['accessibility', ...SPECIALISTS]) {
+    const skill = await read(`skills/${name}/SKILL.md`);
+
+    assert.doesNotMatch(skill, /\b(behaviour|behavioural|colour|neighbour)/i, `${name} spelling`);
+  }
+});

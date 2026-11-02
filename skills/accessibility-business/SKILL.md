@@ -48,7 +48,7 @@ Start from the core review, then apply the priorities below.
 
 - Do not block paste on password, email, or one-time-code fields.
 - Do not expire a session silently, and do not discard entered data on timeout without a recovery path.
-- Do not encode status in color alone in tables, charts, or badges.
+- Do not encode status in color alone in tables, charts, or badges. Red and green status pairs fail for deuteranopia, so check dashboards with `simulateColorVisionDeficiency` and pair each status with a word or icon.
 - Do not claim conformance from a scan; attach the manual evidence.
 
 ## Routing
