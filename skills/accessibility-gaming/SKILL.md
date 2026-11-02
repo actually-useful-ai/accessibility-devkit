@@ -31,14 +31,14 @@ Start from the core review (native semantics, keyboard and focus, names and role
 | Flash and motion safety   | `@accessibility-devkit/motion`         | `createFlashMeter`, `exceedsFlashFrequencyLimit`, `withReducedMotion`, `applyMotionPreference` |
 | Input and controls        | `@accessibility-devkit/motor`          | `meetsTargetSize`, `makeKeyboardDraggable`, `preventRapidRepeat`, `createDwellActivation`      |
 | Captions and audio cues   | `@accessibility-devkit/media`          | `auditMedia`, `hasCaptions`, `ensureAudioControl`                                              |
-| HUD colour and contrast   | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsContrastThreshold`, `simulateColorVisionDeficiency`                  |
+| HUD color and contrast    | `@accessibility-devkit/accommodations` | `getContrastRatio`, `meetsContrastThreshold`, `simulateColorVisionDeficiency`                  |
 | Assist, checkpoints, undo | `@accessibility-devkit/cognitive`      | `createUndoController`, `createSessionTimeout`                                                 |
 
 ## Domain patterns
 
 - A settings screen that groups accessibility options and is reachable from the first screen, not buried mid-game.
 - A subtitle system that names the speaker and describes non-speech audio, with adjustable size and background.
-- Colorblind modes plus a non-color cue (shape, icon, label) for every state that color communicates.
+- Colorblind modes plus a non-color cue (shape, icon, label) for every state that color communicates. Check team colors, loot rarity, and health bars under deuteranopia, protanopia, and tritanopia with `simulateColorVisionDeficiency`; red and green teams are the classic failure.
 - A remap screen covering every action, including menus and prompts.
 - A flash budget checked in your render loop, so an effect that exceeds the threshold is caught in development.
 
