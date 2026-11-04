@@ -47,7 +47,7 @@
     "provenance": true
   },
   "dependencies": {
-    "focus-trap": "^8.2.2"
+    "focus-trap": "^8.2.4"
   },
   "devDependencies": {
     "@types/node": "^26.6.3"
